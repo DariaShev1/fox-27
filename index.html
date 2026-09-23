@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14100c">
+  <meta name="color-scheme" content="dark">
+
+  <title>С днём рождения, Хитрый Рыжий Лис</title>
+  <meta name="description" content="Журнал заданий Хитрого Рыжего Лиса: уровень 27. Прикоснись к медальону.">
+
+  <!-- Open Graph: как ссылка разворачивается в Telegram / WhatsApp / VK.
+       После деплоя замени USERNAME и REPO на свои (см. README). -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="Журнал заданий Хитрого Лиса">
+  <meta property="og:title" content="Хитрый Рыжий Лис, уровень 27">
+  <meta property="og:description" content="Новое задание в журнале: открыть медальон и задуть 27 свечей. 29.09.2026">
+  <meta property="og:url" content="https://USERNAME.github.io/REPO/">
+  <meta property="og:image" content="https://USERNAME.github.io/REPO/images/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Золотой медальон с головой лиса на тёмном фоне">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23d4a74a'/%3E%3Ccircle cx='50' cy='50' r='41' fill='%231d140d'/%3E%3Cpath d='M22 20 L40 36 L60 36 L78 20 L79 50 L68 66 L50 84 L32 66 L21 50Z' fill='%23e0782c'/%3E%3Cpath d='M21 50 L50 68 L79 50 L68 66 L50 84 L32 66Z' fill='%23f3e3c3'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="is-locked">
+
+<!-- ===== Общие SVG-заготовки: градиенты и медальон с лисом ===== -->
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6dc8c"/>
+      <stop offset=".35" stop-color="#c9962f"/>
+      <stop offset=".6" stop-color="#8a5f1b"/>
+      <stop offset="1" stop-color="#e8c46a"/>
+    </linearGradient>
+    <radialGradient id="g-medal-inner" cx=".45" cy=".4" r=".7">
+      <stop offset="0" stop-color="#3d2b1c"/>
+      <stop offset="1" stop-color="#150e09"/>
+    </radialGradient>
+    <linearGradient id="g-fox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f39a45"/>
+      <stop offset=".55" stop-color="#d9692a"/>
+      <stop offset="1" stop-color="#a9441b"/>
+    </linearGradient>
+    <linearGradient id="g-cream" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf0d8"/>
+      <stop offset="1" stop-color="#dcc79c"/>
+    </linearGradient>
+
+    <symbol id="fox-medallion" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="97" fill="url(#g-gold)"/>
+      <circle cx="100" cy="100" r="91" fill="none" stroke="#fff3c8" stroke-opacity=".55" stroke-width="3" stroke-dasharray="0.1 7.1" stroke-linecap="round"/>
+      <circle cx="100" cy="100" r="86" fill="#6b4a1a"/>
+      <circle cx="100" cy="100" r="84" fill="url(#g-medal-inner)"/>
+      <circle cx="100" cy="100" r="76" fill="none" stroke="#c9962f" stroke-opacity=".35" stroke-width="1"/>
+      <g transform="translate(100 104) scale(.8) translate(-100 -100)" stroke-linejoin="round">
+        <path d="M50 36 L84 68 L116 68 L150 36 L152 96 L132 126 L100 162 L68 126 L48 96 Z" fill="url(#g-fox)" stroke="#2a160b" stroke-width="3"/>
+        <path d="M56 50 L78 70 L60 88 Z M144 50 L122 70 L140 88 Z" fill="#3a1d10"/>
+        <path d="M84 68 L116 68 L100 116 Z" fill="#ffc07a" opacity=".45"/>
+        <path d="M48 96 L74 112 L92 124 L100 134 L108 124 L126 112 L152 96 L132 126 L100 162 L68 126 Z" fill="url(#g-cream)" stroke="#2a160b" stroke-width="2"/>
+        <path d="M65 95 L91 104 L72 109 Z M135 95 L109 104 L128 109 Z" fill="#1b0f08"/>
+        <circle cx="77" cy="104" r="2" fill="#f7c948"/>
+        <circle cx="123" cy="104" r="2" fill="#f7c948"/>
+        <path d="M91 149 L109 149 L100 160 Z" fill="#1b0f08"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== 1. ЭКРАН-ВХОД ===== -->
+<div class="intro" id="intro">
+  <div class="intro__half intro__half--left"></div>
+  <div class="intro__half intro__half--right"></div>
+  <div class="intro__center">
+    <p class="intro__kicker" data-text="intro.kicker"></p>
+    <button class="medallion" id="introMedallion" type="button" aria-label="Прикоснись к медальону, чтобы открыть сайт">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#fox-medallion"/></svg>
+    </button>
+    <p class="intro__hint" data-text="intro.hint"></p>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ===== 2. ТОРТ ===== -->
+  <section class="chapter chapter--cake" id="cake" aria-labelledby="cake-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Глава I</p>
+      <h2 class="chapter__title" id="cake-title">Двадцать семь огней</h2>
+      <p class="chapter__lead" data-text="cake.lead"></p>
+    </header>
+
+    <div class="cake reveal">
+      <svg class="cake__svg" id="cakeSvg" viewBox="0 76 360 252" role="group" aria-label="Торт с 27 свечами">
+        <defs>
+          <linearGradient id="g-cake-side" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#24140c"/>
+            <stop offset=".3" stop-color="#4a2a18"/>
+            <stop offset=".55" stop-color="#5b3520"/>
+            <stop offset="1" stop-color="#22130b"/>
+          </linearGradient>
+          <radialGradient id="g-cake-top" cx=".5" cy=".45" r=".6">
+            <stop offset="0" stop-color="#f6ead0"/>
+            <stop offset="1" stop-color="#d9c39a"/>
+          </radialGradient>
+          <radialGradient id="g-flame" cx=".5" cy=".7" r=".6">
+            <stop offset="0" stop-color="#fff8dc"/>
+            <stop offset=".45" stop-color="#ffd166"/>
+            <stop offset="1" stop-color="#e8702a"/>
+          </radialGradient>
+          <radialGradient id="g-glow">
+            <stop offset="0" stop-color="#ffcf73" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#ffcf73" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- тарелка -->
+        <ellipse cx="180" cy="268" rx="172" ry="50" fill="#0d0907"/>
+        <ellipse cx="180" cy="262" rx="172" ry="50" fill="url(#g-gold)"/>
+        <ellipse cx="180" cy="259" rx="160" ry="44" fill="#1a120c"/>
+        <!-- бока торта -->
+        <path d="M30 170 V250 A150 52 0 0 0 330 250 V170 Z" fill="url(#g-cake-side)"/>
+        <!-- золотая лента -->
+        <path d="M30 222 A150 52 0 0 0 330 222 V234 A150 52 0 0 1 30 234 Z" fill="url(#g-gold)" opacity=".9"/>
+        <path d="M30 228 A150 52 0 0 0 330 228" fill="none" stroke="#6b4a1a" stroke-width="1" stroke-dasharray="2 6"/>
+        <!-- крем сверху -->
+        <ellipse cx="180" cy="170" rx="150" ry="52" fill="url(#g-cake-top)"/>
+        <!-- подтёки крема -->
+        <path d="M30 170 Q36 196 44 192 Q50 188 52 200 Q58 214 64 198 Q70 186 80 206 Q88 222 96 202 Q104 190 114 210 Q122 224 130 206 Q138 196 150 214 Q160 228 168 210 Q176 200 188 216 Q198 228 206 210 Q214 198 226 214 Q236 226 244 206 Q252 192 262 208 Q270 220 278 200 Q286 188 294 202 Q302 212 308 196 Q316 186 322 194 Q328 196 330 170 A150 52 0 0 1 30 170 Z" fill="#e7d4ad"/>
+        <!-- медальон-лис на боку -->
+        <use href="#fox-medallion" x="162" y="224" width="36" height="36"/>
+        <!-- свечи вставляются из script.js -->
+        <g id="candles"></g>
+      </svg>
+
+      <div class="cake__controls">
+        <p class="cake__counter" aria-live="polite">Горит свечей: <b id="candlesLeft">27</b></p>
+        <p class="cake__hint" data-text="cake.hintClick"></p>
+        <button class="btn btn--ghost" id="micBtn" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Zm-7 9a7 7 0 0 0 14 0M12 19v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="micBtnLabel" data-text="cake.micButton"></span>
+        </button>
+        <div class="mic-meter" id="micMeter" hidden><span></span></div>
+      </div>
+
+      <div class="cake__wish" id="cakeWish" hidden>
+        <h3 class="wish-title" data-text="cake.wish"></h3>
+        <p class="wish-sub" data-text="cake.afterWish"></p>
+        <button class="btn btn--ghost btn--small" id="relightBtn" type="button">Зажечь свечи заново</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. КАРТА МИРА ===== -->
+  <section class="chapter" id="map" aria-labelledby="map-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Глава II</p>
+      <h2 class="chapter__title" id="map-title" data-text="map.title"></h2>
+      <p class="chapter__lead" data-text="map.lead"></p>
+    </header>
+
+    <nav class="worldmap parchment reveal" aria-label="Карта разделов">
+      <svg viewBox="0 0 400 330" class="worldmap__svg">
+        <defs>
+          <radialGradient id="g-map-burn" cx=".5" cy=".5" r=".72">
+            <stop offset=".7" stop-color="#6b4a1a" stop-opacity="0"/>
+            <stop offset="1" stop-color="#4a2c10" stop-opacity=".55"/>
+          </radialGradient>
+          <pattern id="p-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#6b4a1a" stroke-opacity=".25" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="400" height="330" fill="url(#g-map-burn)"/>
+
+        <!-- Иртыш -->
+        <path d="M150 -5 C120 40 175 70 140 110 C105 150 170 170 150 210 C132 250 190 270 170 335" fill="none" stroke="#5f7d86" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+        <path d="M150 -5 C120 40 175 70 140 110 C105 150 170 170 150 210 C132 250 190 270 170 335" fill="none" stroke="#dfe9e6" stroke-width="1.5" stroke-dasharray="4 8" opacity=".6"/>
+        <text x="154" y="168" class="map-river">р. Иртыш</text>
+
+        <!-- горы -->
+        <g fill="url(#p-hatch)" stroke="#4a3216" stroke-width="1.4" stroke-linejoin="round">
+          <path d="M318 132 L334 106 L350 132 Z"/><path d="M336 132 L356 98 L376 132 Z"/><path d="M300 132 L312 116 L324 132 Z"/>
+          <path d="M20 300 L36 276 L52 300 Z"/><path d="M40 300 L58 270 L76 300 Z"/>
+        </g>
+        <!-- лес -->
+        <g fill="#4d5a2c" opacity=".7">
+          <path d="M220 150 l6 -14 l6 14 Z"/><path d="M232 154 l6 -16 l6 16 Z"/><path d="M244 150 l6 -13 l6 13 Z"/>
+          <path d="M40 60 l6 -14 l6 14 Z"/><path d="M52 64 l6 -16 l6 16 Z"/><path d="M28 66 l6 -13 l6 13 Z"/>
+          <path d="M330 250 l6 -14 l6 14 Z"/><path d="M342 254 l6 -16 l6 16 Z"/>
+        </g>
+
+        <!-- путь героя -->
+        <path class="map-trail" d="M112 84 C170 60 230 40 290 64 C340 90 330 150 300 186 C250 230 180 200 124 222 C90 238 150 280 232 282" fill="none" stroke="#8e2a2a" stroke-width="2.4" stroke-dasharray="7 6" stroke-linecap="round"/>
+
+        <!-- роза ветров -->
+        <g transform="translate(352 290)" class="map-compass">
+          <circle r="22" fill="none" stroke="#6b4a1a" stroke-width="1"/>
+          <path d="M0 -28 L5 0 L0 28 L-5 0 Z" fill="#6b4a1a"/>
+          <path d="M-28 0 L0 -5 L28 0 L0 5 Z" fill="#a98545"/>
+          <text y="-32" text-anchor="middle" class="map-small">С</text>
+        </g>
+        <text x="14" y="168" class="map-note">здесь водятся лисы</text>
+
+        <!-- ЛОКАЦИИ -->
+        <a href="#pavlodar" class="map-loc" aria-label="Павлодар">
+          <circle cx="112" cy="84" r="24" class="map-loc__halo"/>
+          <g transform="translate(112 84)" class="map-loc__icon">
+            <path d="M-12 8 V-2 H-6 V-8 H-2 V-14 L2 -18 L6 -14 V-8 H10 V-2 H14 V8 Z" fill="#3b2614"/>
+            <circle cx="2" cy="-21" r="2" fill="#c9962f"/>
+          </g>
+          <text x="112" y="124" text-anchor="middle" class="map-label">Павлодар</text>
+        </a>
+        <a href="#field" class="map-loc" aria-label="Поле">
+          <circle cx="290" cy="64" r="24" class="map-loc__halo"/>
+          <g transform="translate(290 64)" class="map-loc__icon">
+            <rect x="-15" y="-10" width="30" height="20" fill="none" stroke="#3b2614" stroke-width="2"/>
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="#3b2614" stroke-width="1.5"/>
+            <circle r="4.5" fill="none" stroke="#3b2614" stroke-width="1.5"/>
+          </g>
+          <text x="290" y="104" text-anchor="middle" class="map-label">Поле</text>
+        </a>
+        <a href="#workshop" class="map-loc" aria-label="Мастерская">
+          <circle cx="300" cy="186" r="24" class="map-loc__halo"/>
+          <g transform="translate(300 186)" class="map-loc__icon">
+            <rect x="-9" y="-9" width="18" height="18" rx="2" fill="#3b2614"/>
+            <path d="M-5 -13 V-9 M0 -13 V-9 M5 -13 V-9 M-5 9 V13 M0 9 V13 M5 9 V13 M-13 -5 H-9 M-13 0 H-9 M-13 5 H-9 M9 -5 H13 M9 0 H13 M9 5 H13" stroke="#3b2614" stroke-width="2"/>
+            <circle r="2.5" fill="#c9962f"/>
+          </g>
+          <text x="300" y="226" text-anchor="middle" class="map-label">Мастерская</text>
+        </a>
+        <a href="#worlds" class="map-loc" aria-label="Миры">
+          <circle cx="124" cy="222" r="24" class="map-loc__halo"/>
+          <g transform="translate(124 222)" class="map-loc__icon">
+            <path d="M-14 12 V-4 H-10 V-8 H-6 V-4 H-2 V-12 L2 -18 L6 -12 V-4 H10 V-8 H14 V12 Z" fill="#3b2614"/>
+            <path d="M0 12 V4 A2 2 0 0 1 4 4 V12 Z" fill="#e2cc9c"/>
+          </g>
+          <text x="124" y="262" text-anchor="middle" class="map-label">Миры</text>
+        </a>
+        <a href="#road" class="map-loc" aria-label="Дорога">
+          <circle cx="232" cy="282" r="24" class="map-loc__halo"/>
+          <g transform="translate(232 282)" class="map-loc__icon">
+            <path d="M-4 -14 L-14 12 M4 -14 L14 12" stroke="#3b2614" stroke-width="2"/>
+            <path d="M0 -10 V-5 M0 -1 V4 M0 8 V12" stroke="#3b2614" stroke-width="2"/>
+          </g>
+          <text x="232" y="322" text-anchor="middle" class="map-label">Дорога</text>
+        </a>
+      </svg>
+    </nav>
+  </section>
+
+  <!-- ===== 4. ПАВЛОДАР ===== -->
+  <section class="chapter" id="pavlodar" aria-labelledby="pavlodar-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Локация · Павлодар</p>
+      <h2 class="chapter__title" id="pavlodar-title">Столица правильного берега</h2>
+      <p class="chapter__lead" data-text="pavlodar.lead"></p>
+    </header>
+
+    <figure class="skyline reveal" aria-hidden="true">
+      <svg viewBox="0 0 400 190" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g-dusk" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1b1420"/>
+            <stop offset=".55" stop-color="#6a2b25"/>
+            <stop offset="1" stop-color="#d98a3d"/>
+          </linearGradient>
+          <linearGradient id="g-water" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3a2a22"/>
+            <stop offset="1" stop-color="#0f0b09"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="130" fill="url(#g-dusk)"/>
+        <circle cx="300" cy="118" r="26" fill="#f1c26a" opacity=".85"/>
+        <!-- силуэт города -->
+        <g fill="#140e0b">
+          <rect x="0" y="92" width="26" height="40"/><rect x="22" y="80" width="18" height="52"/>
+          <rect x="42" y="98" width="30" height="34"/>
+          <!-- мечеть: купол и минареты -->
+          <rect x="78" y="62" width="4" height="70"/><path d="M76 62 L80 50 L84 62 Z"/>
+          <rect x="128" y="62" width="4" height="70"/><path d="M126 62 L130 50 L134 62 Z"/>
+          <rect x="88" y="96" width="36" height="36"/>
+          <path d="M88 98 Q106 58 124 98 Z"/><rect x="105" y="66" width="2" height="8"/>
+          <!-- собор с луковками -->
+          <rect x="150" y="96" width="44" height="36"/>
+          <rect x="164" y="80" width="16" height="18"/>
+          <path d="M162 82 Q172 58 182 82 Z"/><rect x="171" y="56" width="2" height="10"/><rect x="168" y="59" width="8" height="1.6"/>
+          <path d="M148 98 Q154 84 160 98 Z"/><path d="M184 98 Q190 84 196 98 Z"/>
+          <rect x="200" y="86" width="22" height="46"/><rect x="224" y="100" width="28" height="32"/>
+          <rect x="256" y="74" width="16" height="58"/><rect x="274" y="94" width="20" height="38"/>
+          <!-- мост -->
+          <path d="M300 116 H400 V122 H300 Z"/>
+          <path d="M318 122 V132 H322 V122 Z M352 122 V132 H356 V122 Z M386 122 V132 H390 V122 Z"/>
+          <path d="M300 116 Q320 100 338 116 Q356 100 374 116 Q390 102 400 110" fill="none" stroke="#140e0b" stroke-width="2"/>
+        </g>
+        <!-- набережная с фонарями -->
+        <rect x="0" y="130" width="400" height="6" fill="#2a1d15"/>
+        <g stroke="#140e0b" stroke-width="1.5">
+          <line x1="30" y1="130" x2="30" y2="112"/><line x1="90" y1="130" x2="90" y2="112"/><line x1="150" y1="130" x2="150" y2="112"/><line x1="210" y1="130" x2="210" y2="112"/><line x1="270" y1="130" x2="270" y2="112"/>
+        </g>
+        <g fill="#ffd98a" class="skyline__lamps">
+          <circle cx="30" cy="111" r="2.2"/><circle cx="90" cy="111" r="2.2"/><circle cx="150" cy="111" r="2.2"/><circle cx="210" cy="111" r="2.2"/><circle cx="270" cy="111" r="2.2"/>
+        </g>
+        <!-- вода и отражения -->
+        <rect y="136" width="400" height="54" fill="url(#g-water)"/>
+        <g stroke="#f1c26a" stroke-linecap="round" opacity=".6" class="skyline__waves">
+          <line x1="280" y1="146" x2="320" y2="146" stroke-width="2"/><line x1="288" y1="154" x2="312" y2="154" stroke-width="1.6"/><line x1="294" y1="162" x2="306" y2="162" stroke-width="1.2"/>
+          <line x1="26" y1="148" x2="34" y2="148"/><line x1="86" y1="150" x2="94" y2="150"/><line x1="146" y1="148" x2="154" y2="148"/><line x1="206" y1="150" x2="214" y2="150"/><line x1="266" y1="148" x2="274" y2="148"/>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="prose reveal" data-paras="pavlodar.text"></div>
+
+    <aside class="reels reveal" aria-live="off">
+      <p class="reels__label" data-text="pavlodar.reelsJoke"></p>
+      <p class="reels__count"><span id="reelsCount">0</span></p>
+      <p class="reels__note" data-text="pavlodar.reelsNote"></p>
+    </aside>
+
+    <div class="gallery reveal" data-gallery="pavlodar.photos"></div>
+  </section>
+
+  <!-- ===== 4½. ЛИСЁНОК (детские фото) ===== -->
+  <section class="chapter" id="childhood" aria-labelledby="childhood-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Архив · Павлодар</p>
+      <h2 class="chapter__title" id="childhood-title">Лисёнок</h2>
+      <p class="chapter__lead" data-text="childhood.lead"></p>
+    </header>
+    <div class="gallery gallery--polaroid reveal" data-gallery="childhood.photos"></div>
+    <div class="prose reveal" data-paras="childhood.text"></div>
+  </section>
+
+  <!-- ===== 5. ПОЛЕ ===== -->
+  <section class="chapter" id="field" aria-labelledby="field-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Локация · Поле</p>
+      <h2 class="chapter__title" id="field-title">Серия пенальти</h2>
+      <p class="chapter__lead" data-text="field.lead"></p>
+    </header>
+
+    <div class="penalty reveal">
+      <div class="penalty__board">
+        <div class="penalty__score" aria-live="polite">
+          <span>Голы: <b id="pkGoals">0</b></span>
+          <span class="penalty__dots" id="pkDots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span>Удар <b id="pkShot">1</b>/5</span>
+        </div>
+        <canvas id="pkCanvas" class="penalty__canvas" aria-label="Мини-игра пенальти: нажми на ворота, чтобы пробить" role="img"></canvas>
+        <p class="penalty__hint" id="pkHint">Нажми в ворота туда, куда хочешь пробить</p>
+        <div class="penalty__result" id="pkResult" hidden>
+          <p id="pkResultText"></p>
+          <button class="btn btn--small" id="pkRestart" type="button">Ещё серия</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="scarves reveal" aria-hidden="true">
+      <div class="scarf scarf--madrid"><span data-text="field.scarfMadrid"></span></div>
+      <div class="scarf scarf--irtysh"><span data-text="field.scarfIrtysh"></span></div>
+    </div>
+    <div class="prose reveal" data-paras="field.text"></div>
+  </section>
+
+  <!-- ===== 6. МАСТЕРСКАЯ ===== -->
+  <section class="chapter" id="workshop" aria-labelledby="workshop-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Локация · Мастерская</p>
+      <h2 class="chapter__title" id="workshop-title">Рабочий стенд</h2>
+      <p class="chapter__lead" data-text="workshop.lead"></p>
+    </header>
+
+    <div class="bench reveal">
+      <svg class="board" viewBox="0 0 320 200" aria-label="Отладочная плата со светодиодом">
+        <defs>
+          <linearGradient id="g-pcb" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#16392c"/>
+            <stop offset="1" stop-color="#0d251c"/>
+          </linearGradient>
+          <radialGradient id="g-led-glow">
+            <stop offset="0" stop-color="#ffe08a" stop-opacity=".95"/>
+            <stop offset=".35" stop-color="#ffb13b" stop-opacity=".5"/>
+            <stop offset="1" stop-color="#ff9a2a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="6" y="6" width="308" height="188" rx="12" fill="url(#g-pcb)" stroke="#c9962f" stroke-opacity=".5"/>
+        <!-- крепёжные отверстия -->
+        <g fill="#0a0806" stroke="#c9962f" stroke-width="3">
+          <circle cx="22" cy="22" r="5"/><circle cx="298" cy="22" r="5"/><circle cx="22" cy="178" r="5"/><circle cx="298" cy="178" r="5"/>
+        </g>
+        <!-- дорожки -->
+        <g fill="none" stroke="#c9962f" stroke-opacity=".35" stroke-width="1.6">
+          <path d="M40 40 H100 L118 58 V76"/><path d="M40 52 H92 L108 68 V80"/><path d="M200 100 H240 L256 116 H280"/>
+          <path d="M200 110 H232 L248 126 V150 H270"/><path d="M160 140 V160 H110 L96 146 H60"/><path d="M170 140 V168 H230"/>
+          <path d="M120 100 H86 L72 114 V150"/><path d="M200 80 H246 L262 64 H280"/>
+        </g>
+        <!-- гребёнки штырей -->
+        <g fill="#c9962f">
+          <g id="pinrow"><rect x="40" y="182" width="5" height="5"/><rect x="52" y="182" width="5" height="5"/><rect x="64" y="182" width="5" height="5"/><rect x="76" y="182" width="5" height="5"/><rect x="88" y="182" width="5" height="5"/><rect x="100" y="182" width="5" height="5"/><rect x="112" y="182" width="5" height="5"/><rect x="124" y="182" width="5" height="5"/><rect x="136" y="182" width="5" height="5"/><rect x="148" y="182" width="5" height="5"/><rect x="160" y="182" width="5" height="5"/><rect x="172" y="182" width="5" height="5"/><rect x="184" y="182" width="5" height="5"/><rect x="196" y="182" width="5" height="5"/><rect x="208" y="182" width="5" height="5"/><rect x="220" y="182" width="5" height="5"/><rect x="232" y="182" width="5" height="5"/><rect x="244" y="182" width="5" height="5"/><rect x="256" y="182" width="5" height="5"/><rect x="268" y="182" width="5" height="5"/></g>
+          <use href="#pinrow" y="-172"/>
+        </g>
+        <!-- микроконтроллер -->
+        <g transform="translate(160 100)">
+          <g fill="#b9b3a6">
+            <path d="M-26 -34 v-6 M-18 -34 v-6 M-10 -34 v-6 M-2 -34 v-6 M6 -34 v-6 M14 -34 v-6 M22 -34 v-6 M-26 34 v6 M-18 34 v6 M-10 34 v6 M-2 34 v6 M6 34 v6 M14 34 v6 M22 34 v6 M-34 -26 h-6 M-34 -18 h-6 M-34 -10 h-6 M-34 -2 h-6 M-34 6 h-6 M-34 14 h-6 M-34 22 h-6 M34 -26 h6 M34 -18 h6 M34 -10 h6 M34 -2 h6 M34 6 h6 M34 14 h6 M34 22 h6" stroke="#b9b3a6" stroke-width="2.4"/>
+          </g>
+          <rect x="-34" y="-34" width="68" height="68" rx="3" fill="#161616" stroke="#333"/>
+          <circle cx="-24" cy="-24" r="3" fill="#2b2b2b"/>
+          <text y="-2" text-anchor="middle" class="chip-text">LIS·27</text>
+          <text y="12" text-anchor="middle" class="chip-sub">ARM · 168 MHz</text>
+        </g>
+        <!-- кварц -->
+        <rect x="80" y="84" width="24" height="12" rx="6" fill="#cfcac0" stroke="#8d877c"/>
+        <text x="92" y="108" text-anchor="middle" class="pcb-label">8 MHz</text>
+        <!-- USB -->
+        <rect x="6" y="80" width="26" height="30" rx="2" fill="#a9a59c" stroke="#77736b"/>
+        <rect x="10" y="88" width="14" height="14" fill="#5b5953"/>
+        <!-- кнопки -->
+        <g><rect x="238" y="30" width="22" height="22" rx="3" fill="#2a2a2a"/><circle cx="249" cy="41" r="6" fill="#111" stroke="#555"/></g>
+        <text x="249" y="64" text-anchor="middle" class="pcb-label">RESET</text>
+        <g><rect x="272" y="30" width="22" height="22" rx="3" fill="#2a2a2a"/><circle cx="283" cy="41" r="6" fill="#1b3a8c" stroke="#555"/></g>
+        <text x="283" y="64" text-anchor="middle" class="pcb-label">USER</text>
+        <!-- светодиод питания -->
+        <rect x="46" y="140" width="10" height="6" fill="#3b1111"/><circle cx="51" cy="143" r="5" fill="#ff4b3a" opacity=".35"/>
+        <text x="51" y="160" text-anchor="middle" class="pcb-label">PWR</text>
+        <!-- ПОЛЬЗОВАТЕЛЬСКИЙ СВЕТОДИОД (пасхалка) -->
+        <g class="led" id="led" role="button" tabindex="0" aria-label="Светодиод LD2: нажми, чтобы изменить частоту мигания">
+          <rect x="240" y="120" width="60" height="60" fill="transparent"/>
+          <circle class="led__glow" cx="270" cy="146" r="26" fill="url(#g-led-glow)"/>
+          <rect x="262" y="141" width="16" height="10" rx="1" fill="#5a3a10" stroke="#c9962f" stroke-width=".8"/>
+          <rect class="led__light" x="264" y="143" width="12" height="6" rx="1" fill="#ffe08a"/>
+          <text x="270" y="170" text-anchor="middle" class="pcb-label">LD2</text>
+        </g>
+        <text x="120" y="160" class="pcb-silk">REV 27 · 29.09</text>
+      </svg>
+      <p class="bench__freq" aria-live="polite">Частота: <b id="ledFreq">60</b> миг/мин <span id="ledNote" data-text="workshop.ledHint"></span></p>
+    </div>
+
+    <div class="code reveal">
+      <div class="code__bar"><i></i><i></i><i></i><span>Core/Src/main.c</span></div>
+      <pre class="code__body"><code id="firmware"></code></pre>
+    </div>
+
+    <div class="prose reveal" data-paras="workshop.text"></div>
+  </section>
+
+  <!-- ===== 7. МИРЫ ===== -->
+  <section class="chapter" id="worlds" aria-labelledby="worlds-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Локация · Миры</p>
+      <h2 class="chapter__title" id="worlds-title">Полка странника</h2>
+      <p class="chapter__lead" data-text="worlds.lead"></p>
+    </header>
+
+    <div class="shelf reveal">
+      <div class="shelf__books" id="shelf" role="group" aria-label="Книги на полке"></div>
+      <div class="shelf__plank" aria-hidden="true"></div>
+      <div class="shelf__note parchment" id="shelfNote" aria-live="polite">
+        <p class="shelf__note-title" id="shelfNoteTitle">Вытяни любую книгу</p>
+        <p id="shelfNoteText">Нажми на корешок — у каждой книги есть своя записка.</p>
+      </div>
+    </div>
+
+    <article class="quest-card reveal" aria-labelledby="diablo-title">
+      <p class="quest-card__kicker">Задание</p>
+      <h3 class="quest-card__title" id="diablo-title" data-text="worlds.diablo.title"></h3>
+      <p class="quest-card__status">Статус: <span class="badge badge--progress" data-text="worlds.diablo.status"></span></p>
+      <div class="progress" role="progressbar" aria-label="Прогресс задания" aria-valuemin="0" aria-valuemax="100" id="diabloProgress"><span></span></div>
+      <ul class="objectives" id="diabloObjectives"></ul>
+      <p class="quest-card__reward" data-text="worlds.diablo.reward"></p>
+    </article>
+
+    <!-- Кола: карточка предмета в духе игрового инвентаря -->
+    <article class="item-card reveal" aria-labelledby="cola-name">
+      <p class="item-card__kicker" data-text="cola.kicker"></p>
+      <h3 class="item-card__name" id="cola-name" data-text="cola.name"></h3>
+      <p class="item-card__rarity" data-text="cola.rarity"></p>
+      <div class="item-card__body">
+        <svg class="potion" id="potion" viewBox="0 0 120 170" aria-hidden="true">
+          <defs>
+            <clipPath id="clip-bottle">
+              <path d="M50 22 V42 C50 52 36 56 36 72 V148 Q36 158 46 158 H74 Q84 158 84 148 V72 C84 56 70 52 70 42 V22 Z"/>
+            </clipPath>
+            <linearGradient id="g-cola" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#1a0904"/>
+              <stop offset=".45" stop-color="#4a1f0e"/>
+              <stop offset="1" stop-color="#140703"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="60" cy="162" rx="30" ry="5" fill="rgba(0,0,0,.45)"/>
+          <g clip-path="url(#clip-bottle)">
+            <rect x="30" y="20" width="60" height="142" fill="rgba(255,240,220,.07)"/>
+            <g class="potion__liquid" id="potionLiquid">
+              <rect x="30" y="46" width="60" height="116" fill="url(#g-cola)"/>
+              <rect x="30" y="44" width="60" height="4" fill="#c79a6b" opacity=".75"/>
+              <g class="potion__bubbles" fill="#f3d9b5">
+                <circle cx="44" cy="154" r="1.6" style="animation-delay:0s"/>
+                <circle cx="52" cy="156" r="1.2" style="animation-delay:0.7s"/>
+                <circle cx="60" cy="152" r="1.8" style="animation-delay:1.3s"/>
+                <circle cx="68" cy="155" r="1.3" style="animation-delay:0.4s"/>
+                <circle cx="75" cy="153" r="1.5" style="animation-delay:1.9s"/>
+                <circle cx="48" cy="150" r="1.1" style="animation-delay:2.2s"/>
+                <circle cx="64" cy="157" r="1.4" style="animation-delay:1.6s"/>
+                <circle cx="71" cy="151" r="1.0" style="animation-delay:0.9s"/>
+              </g>
+            </g>
+          </g>
+          <path d="M50 22 V42 C50 52 36 56 36 72 V148 Q36 158 46 158 H74 Q84 158 84 148 V72 C84 56 70 52 70 42 V22 Z" fill="none" stroke="#e8c46a" stroke-opacity=".75" stroke-width="2"/>
+          <path d="M42 80 V140" stroke="#fff" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"/>
+          <rect x="36" y="92" width="48" height="30" fill="#8e2a2a"/>
+          <path d="M36 96 H84 M36 118 H84" stroke="#e8c46a" stroke-width="1"/>
+          <text x="60" y="111" text-anchor="middle" class="potion__label">XXVII</text>
+          <path d="M47 22 V14 Q60 10 73 14 V22 L71 24.5 L69 22 L67 24.5 L65 22 L63 24.5 L61 22 L59 24.5 L57 22 L55 24.5 L53 22 L51 24.5 L49 22 Z" fill="#b8433b" stroke="#6b1f1a" stroke-width="1"/>
+        </svg>
+        <ul class="item-card__stats" id="colaStats"></ul>
+      </div>
+      <p class="item-card__flavor" data-text="cola.flavor"></p>
+      <div class="item-card__foot">
+        <button class="btn btn--small" id="colaBtn" type="button"></button>
+        <p class="item-card__status" id="colaStatus" aria-live="polite"></p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ===== 8. ЖУРНАЛ ЗАДАНИЙ ===== -->
+  <section class="chapter" id="quests" aria-labelledby="quests-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Глава III</p>
+      <h2 class="chapter__title" id="quests-title">Журнал заданий</h2>
+      <p class="chapter__lead" data-text="questLog.lead"></p>
+    </header>
+    <ol class="quests" id="questList"></ol>
+  </section>
+
+  <!-- ===== 9. ДОРОГА ===== -->
+  <section class="chapter" id="road" aria-labelledby="road-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Локация · Дорога</p>
+      <h2 class="chapter__title" id="road-title">Музыка для дороги</h2>
+      <p class="chapter__lead" data-text="music.lead"></p>
+    </header>
+
+    <figure class="road reveal" aria-hidden="true">
+      <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g-road-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#140f14"/>
+            <stop offset=".6" stop-color="#5a2422"/>
+            <stop offset="1" stop-color="#c7712f"/>
+          </linearGradient>
+          <linearGradient id="g-sun" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f6d88a"/>
+            <stop offset="1" stop-color="#d9692a"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="120" fill="url(#g-road-sky)"/>
+        <circle cx="200" cy="118" r="46" fill="url(#g-sun)"/>
+        <g fill="#5a2422"><rect x="150" y="96" width="100" height="3"/><rect x="150" y="104" width="100" height="4"/><rect x="150" y="112" width="100" height="5"/></g>
+        <path d="M0 120 L40 104 L80 112 L130 96 L170 110 L230 108 L280 94 L330 108 L370 100 L400 110 V120 Z" fill="#1c1310"/>
+        <rect y="120" width="400" height="100" fill="#120d0b"/>
+        <path d="M194 120 L206 120 L330 220 L70 220 Z" fill="#2a211c"/>
+        <path d="M194 120 L70 220 M206 120 L330 220" stroke="#6b4a1a" stroke-width="2"/>
+        <path class="road__line" d="M200 122 L200 220" stroke="#f1c26a" stroke-width="4" stroke-dasharray="10 12"/>
+        <g fill="#0b0807">
+          <path d="M40 220 L46 160 L52 220 Z"/><path d="M356 220 L362 150 L368 220 Z"/><path d="M90 170 L94 140 L98 170 Z"/><path d="M306 170 L310 136 L314 170 Z"/>
+        </g>
+      </svg>
+    </figure>
+    <div class="prose reveal" data-paras="music.text"></div>
+    <p class="center reveal"><button class="btn" id="roadPlay" type="button">Включить музыку дороги</button></p>
+  </section>
+
+  <!-- ===== 10. ФИНАЛ ===== -->
+  <section class="chapter chapter--final" id="final" aria-labelledby="final-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Эпилог</p>
+      <h2 class="chapter__title" id="final-title" data-text="final.title"></h2>
+    </header>
+
+    <article class="letter parchment reveal">
+      <div class="letter__body" data-paras="final.text"></div>
+      <p class="letter__sign" data-text="signature"></p>
+    </article>
+
+    <div class="gallery reveal" data-gallery="final.photos"></div>
+
+    <div class="finale reveal">
+      <svg class="finale__medal" viewBox="0 0 200 200" aria-hidden="true"><use href="#fox-medallion"/></svg>
+      <p class="finale__date" data-text="birthday"></p>
+      <p class="finale__friends" id="friendDays"></p>
+    </div>
+  </section>
+</main>
+
+<!-- Кнопка «к карте» -->
+<a href="#map" class="to-map" id="toMap" aria-label="Вернуться к карте">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z M9 3v15 M15 6v15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+</a>
+
+<!-- ===== Аудиоплеер ===== -->
+<div class="player" id="player" aria-label="Музыкальный плеер">
+  <button class="player__btn" id="playBtn" type="button" aria-label="Включить музыку" aria-pressed="false">
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>
+  </button>
+  <div class="player__meta">
+    <span class="player__label">Сейчас в дороге</span>
+    <span class="player__title" id="trackTitle"></span>
+  </div>
+  <label class="player__vol" id="volWrap">
+    <span class="sr-only">Громкость</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.6">
+  </label>
+  <audio id="audio" preload="none" loop></audio>
+</div>
+
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+<script src="script.js"></script>
+</body>
+</html>
