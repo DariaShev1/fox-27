@@ -29,7 +29,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <!-- ?v= — версия файлов: увеличь число после правок, чтобы браузеры не брали старую копию из кэша -->
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body class="is-locked">
 
@@ -227,14 +228,14 @@
           </g>
           <text x="290" y="104" text-anchor="middle" class="map-label">Поле</text>
         </a>
-        <a href="#workshop" class="map-loc" aria-label="Мастерская">
+        <a href="#lab" class="map-loc" aria-label="Лаборатория">
           <circle cx="300" cy="186" r="24" class="map-loc__halo"/>
           <g transform="translate(300 186)" class="map-loc__icon">
             <rect x="-9" y="-9" width="18" height="18" rx="2" fill="#3b2614"/>
             <path d="M-5 -13 V-9 M0 -13 V-9 M5 -13 V-9 M-5 9 V13 M0 9 V13 M5 9 V13 M-13 -5 H-9 M-13 0 H-9 M-13 5 H-9 M9 -5 H13 M9 0 H13 M9 5 H13" stroke="#3b2614" stroke-width="2"/>
             <circle r="2.5" fill="#c9962f"/>
           </g>
-          <text x="300" y="226" text-anchor="middle" class="map-label">Мастерская</text>
+          <text x="300" y="226" text-anchor="middle" class="map-label">Лаборатория</text>
         </a>
         <a href="#worlds" class="map-loc" aria-label="Миры">
           <circle cx="124" cy="222" r="24" class="map-loc__halo"/>
@@ -370,12 +371,12 @@
     <div class="prose reveal" data-paras="field.text"></div>
   </section>
 
-  <!-- ===== 6. МАСТЕРСКАЯ ===== -->
-  <section class="chapter" id="workshop" aria-labelledby="workshop-title">
+  <!-- ===== 6. ЛАБОРАТОРИЯ ===== -->
+  <section class="chapter" id="lab" aria-labelledby="lab-title">
     <header class="chapter__head reveal">
-      <p class="chapter__num">Локация · Мастерская</p>
-      <h2 class="chapter__title" id="workshop-title">Рабочий стенд</h2>
-      <p class="chapter__lead" data-text="workshop.lead"></p>
+      <p class="chapter__num">Локация · Лаборатория</p>
+      <h2 class="chapter__title" id="lab-title">Рабочий стенд</h2>
+      <p class="chapter__lead" data-text="lab.lead"></p>
     </header>
 
     <div class="bench reveal">
@@ -441,15 +442,55 @@
         </g>
         <text x="120" y="160" class="pcb-silk">REV 27 · 29.09</text>
       </svg>
-      <p class="bench__freq" aria-live="polite">Частота: <b id="ledFreq">60</b> миг/мин <span id="ledNote" data-text="workshop.ledHint"></span></p>
+      <p class="bench__freq" aria-live="polite">Частота: <b id="ledFreq">60</b> миг/мин <span id="ledNote" data-text="lab.ledHint"></span></p>
     </div>
 
-    <div class="code reveal">
-      <div class="code__bar"><i></i><i></i><i></i><span>Core/Src/main.c</span></div>
-      <pre class="code__body"><code id="firmware"></code></pre>
+    <div class="ide reveal">
+      <div class="ide__tabs" role="tablist" aria-label="Инструменты разработчика">
+        <button class="ide__tab" type="button" role="tab" id="tab-uart" aria-controls="panel-uart" aria-selected="true" data-title="UART · 115200 бод">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 9l3 3-3 3M12 15h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ide__tab-name">Терминал</span><span class="ide__tab-file">UART</span>
+        </button>
+        <button class="ide__tab" type="button" role="tab" id="tab-code" aria-controls="panel-code" aria-selected="false" tabindex="-1" data-title="Core/Src/main.c">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 3v4M12 3v4M15 3v4M9 17v4M12 17v4M15 17v4M3 9h4M3 12h4M3 15h4M17 9h4M17 12h4M17 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="ide__tab-name">Прошивка</span><span class="ide__tab-file">main.c</span>
+        </button>
+        <button class="ide__tab" type="button" role="tab" id="tab-git" aria-controls="panel-git" aria-selected="false" tabindex="-1" data-title="git log --graph">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="8" r="2.2"/><path d="M6 7.2v9.6M18 10.2c0 4.5-7 3.5-11 7"/></g></svg><span class="ide__tab-name">История</span><span class="ide__tab-file">git log</span>
+        </button>
+      </div>
+
+      <div class="ide__window">
+        <div class="ide__titlebar"><i></i><i></i><i></i><span id="ideTitle">UART · 115200 бод</span></div>
+
+        <div class="ide__panel ide__panel--term" id="panel-uart" role="tabpanel" aria-labelledby="tab-uart">
+          <div class="term__out" id="uartOut" aria-live="polite"></div>
+          <form class="term__form" id="uartForm" autocomplete="off">
+            <label class="sr-only" for="uartInput">Команда для терминала</label>
+            <span class="term__prompt" aria-hidden="true">&gt;</span>
+            <input class="term__input" id="uartInput" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="введи команду или нажми ниже">
+          </form>
+          <div class="term__cmds">
+            <p class="term__cmds-label">Команды</p>
+            <div class="term__chips">
+              <button class="chip" type="button" data-cmd="status">status</button>
+              <button class="chip" type="button" data-cmd="measure">measure</button>
+              <button class="chip" type="button" data-cmd="flash">flash</button>
+              <button class="chip" type="button" data-cmd="git status">git status</button>
+              <button class="chip chip--gold" type="button" data-cmd="wish">wish — поздравление</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ide__panel" id="panel-code" role="tabpanel" aria-labelledby="tab-code" hidden>
+          <pre class="code__body"><code id="firmware"></code></pre>
+        </div>
+
+        <div class="ide__panel" id="panel-git" role="tabpanel" aria-labelledby="tab-git" hidden>
+          <pre class="code__body git" id="gitLog"></pre>
+        </div>
+      </div>
     </div>
 
-    <div class="prose reveal" data-paras="workshop.text"></div>
+    <div class="prose reveal" data-paras="lab.text"></div>
   </section>
 
   <!-- ===== 7. МИРЫ ===== -->
@@ -578,6 +619,27 @@
     <p class="center reveal"><button class="btn" id="roadPlay" type="button">Включить музыку дороги</button></p>
   </section>
 
+  <!-- ===== ЗАЛ ТРОФЕЕВ (достижения) ===== -->
+  <section class="chapter" id="trophies" aria-labelledby="trophies-title">
+    <header class="chapter__head reveal">
+      <p class="chapter__num">Глава IV</p>
+      <h2 class="chapter__title" id="trophies-title" data-text="achievements.title"></h2>
+      <p class="chapter__lead" data-text="achievements.lead"></p>
+    </header>
+    <div class="trophies reveal">
+      <div class="trophies__head">
+        <span>Собрано: <b id="trophyCount">0</b></span>
+        <button class="btn btn--ghost btn--small" id="trophyReset" type="button" data-text="achievements.reset"></button>
+      </div>
+      <div class="progress" id="trophyProgress" role="progressbar" aria-label="Собрано достижений" aria-valuemin="0"><span></span></div>
+      <ul class="trophies__grid" id="trophyList"></ul>
+      <div class="trophies__note" aria-live="polite">
+        <p class="trophies__note-title" id="trophyNoteTitle"></p>
+        <p class="trophies__note-text" id="trophyNoteText"></p>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== 10. ФИНАЛ ===== -->
   <section class="chapter chapter--final" id="final" aria-labelledby="final-title">
     <header class="chapter__head reveal">
@@ -590,6 +652,73 @@
       <p class="letter__sign" data-text="signature"></p>
     </article>
 
+    <!-- Легендарный лут: сундук с подарком -->
+    <div class="loot reveal" id="loot">
+      <p class="loot__kicker" data-text="loot.kicker"></p>
+      <p class="loot__hint" data-text="loot.hint"></p>
+      <div class="loot__stage">
+        <div class="loot__beam" aria-hidden="true"></div>
+        <svg class="chest" viewBox="0 0 200 160" aria-hidden="true">
+          <defs>
+            <linearGradient id="g-wood" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6e4124"/>
+              <stop offset="1" stop-color="#3a2112"/>
+            </linearGradient>
+            <radialGradient id="g-chest-glow">
+              <stop offset="0" stop-color="#fff0c8"/>
+              <stop offset=".4" stop-color="#ffb35c"/>
+              <stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="100" cy="148" rx="82" ry="8" fill="rgba(0,0,0,.5)"/>
+          <ellipse class="chest__glow" cx="100" cy="76" rx="70" ry="18" fill="url(#g-chest-glow)"/>
+          <rect x="30" y="78" width="140" height="66" rx="4" fill="url(#g-wood)" stroke="#2a160b" stroke-width="2"/>
+          <path d="M30 100 H170 M30 122 H170" stroke="#2a160b" stroke-opacity=".55"/>
+          <rect x="44" y="78" width="10" height="66" fill="url(#g-gold)"/>
+          <rect x="146" y="78" width="10" height="66" fill="url(#g-gold)"/>
+          <rect x="88" y="80" width="24" height="28" rx="3" fill="url(#g-gold)" stroke="#6b4a1a"/>
+          <circle cx="100" cy="91" r="3.5" fill="#2a160b"/>
+          <rect x="98.5" y="92" width="3" height="9" fill="#2a160b"/>
+          <g class="chest__lid">
+            <path d="M30 78 V60 Q30 34 100 34 Q170 34 170 60 V78 Z" fill="url(#g-wood)" stroke="#2a160b" stroke-width="2"/>
+            <path d="M30 66 H170" stroke="#2a160b" stroke-opacity=".5"/>
+            <path d="M44 78 V52 Q44 40 54 38 V78 Z M146 78 V38 Q156 40 156 52 V78 Z" fill="url(#g-gold)"/>
+          </g>
+        </svg>
+      </div>
+      <p class="center"><button class="btn" id="lootBtn" type="button" data-text="loot.open"></button></p>
+
+      <article class="item-card loot__item" id="lootItem" hidden aria-labelledby="loot-name">
+        <p class="item-card__kicker" data-text="loot.label"></p>
+        <h3 class="item-card__name" id="loot-name" data-text="loot.name"></h3>
+        <p class="item-card__rarity" data-text="loot.type"></p>
+        <div class="item-card__body">
+          <svg class="loot__icon" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="g-cloth" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#3a3036"/>
+                <stop offset="1" stop-color="#1c171b"/>
+              </linearGradient>
+              <radialGradient id="g-rune">
+                <stop offset="0" stop-color="#ffb35c" stop-opacity=".9"/>
+                <stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <path d="M24 40 L44 30 Q60 40 76 30 L96 40 L96 98 Q60 104 24 98 Z" fill="url(#g-cloth)" stroke="#e8c46a" stroke-opacity=".6" stroke-width="1.5"/>
+            <path d="M44 30 Q60 48 76 30" fill="none" stroke="#e8c46a" stroke-opacity=".5" stroke-width="1.5"/>
+            <path d="M24 40 V64 L36 58 M96 40 V64 L84 58" fill="none" stroke="#e8c46a" stroke-opacity=".35"/>
+            <path d="M30 88 H90" stroke="#e8c46a" stroke-opacity=".2"/>
+            <circle cx="60" cy="68" r="22" fill="url(#g-rune)"/>
+            <text x="60" y="77" text-anchor="middle" class="loot__icon-rune">C</text>
+          </svg>
+          <ul class="item-card__stats" id="lootStats"></ul>
+        </div>
+        <p class="loot__rune" data-text="loot.rune"></p>
+        <p class="loot__rune-note" data-text="loot.runeNote"></p>
+        <p class="item-card__flavor" data-text="loot.flavor"></p>
+      </article>
+    </div>
+
     <div class="gallery reveal" data-gallery="final.photos"></div>
 
     <div class="finale reveal">
@@ -599,6 +728,9 @@
     </div>
   </section>
 </main>
+
+<!-- Всплывающие плашки достижений -->
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <!-- Кнопка «к карте» -->
 <a href="#map" class="to-map" id="toMap" aria-label="Вернуться к карте">
@@ -625,6 +757,6 @@
 
 <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
-<script src="script.js"></script>
+<script src="script.js?v=8"></script>
 </body>
 </html>
