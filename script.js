@@ -112,7 +112,47 @@ const CONTENT = {
   // --- 6. Лаборатория ----------------------------------------------------------
   lab: {
     lead: "Здесь не паяют — здесь прошивают. Главные инструменты: STM32, отладчик, git и очень много терпения.",
-    ledHint: "Нажми на светодиод LD2.",
+    ledHint: "Нажми кнопку USER на плате.",
+    resetNote: "RESET — перезагрузка. Снова 60 вспышек в минуту.",
+
+    // OLED-дисплей под платой: экраны листаются сами и по нажатию
+    oled: {
+      hint: "Нажми на дисплей, чтобы листать экраны",
+      marquee: "С ДНЁМ РОЖДЕНИЯ, ХИТРЫЙ ЛИС!", // заглавными: так читается на дисплее
+      foxLine1: "ХИТРЫЙ",
+      foxLine2: "ЛИС V27",
+      countTitle: "ДО 29.09",
+      countLeft: "ОСТАЛОСЬ",
+      todayBig: "СЕГОДНЯ!",
+      todaySmall: "С ДР, ЛИС!",
+      afterBig: "С ДР!",
+      uartLine2: "ДЕКОДИРУЙ МЕНЯ",
+      led27: "ПО РАЗУ ЗА ГОД",
+      led60: "ОБЫЧНЫЙ РЕЖИМ",
+      genius1: "ТЫ", // крупно, до 8 символов в строке
+      genius2: "ГЕНИЙ!",
+    },
+
+    // Логический анализатор: загадка. Плата передаёт answer по UART в UTF-8 на 115200 бод.
+    // Скорость нигде не написана прямо: её можно измерить по осциллограмме или посчитать из BRR = 0x16D при PCLK1 = 42 MHz.
+    analyzer: {
+      intro: "Плата что-то передаёт по линии TX. Захват уже сделан — осталось настроить декодер и понять, что там.",
+      answer: "ты гений", // слово-разгадка: именно его «передаёт» плата
+      question: "Что передаёт плата?",
+      check: "Проверить",
+      statusOk: "Кадров: {n} · ошибок нет",
+      statusBad: "Кадров: {n} · ошибок кадра: {e} — скорость явно не та",
+      wrong: "Не то. Посмотри на байты ещё раз.",
+      hintButton: "Подсказка",
+      hints: [
+        "Скорость прямо нигде не написана — но её можно измерить. Найди самый короткий импульс на осциллограмме: это один бит.",
+        "Или посчитай, как настоящий embedded-инженер: регистр BRR и частота шины есть на дисплее и в прошивке.",
+        "ASCII выдаёт кракозябры? Значит, это не ASCII. Кириллица в UTF-8 — по два байта на букву.",
+        "D1 82 — это «т». Дальше сам.",
+      ],
+      winTitle: "Точно. Ты гений.",
+      secret: "[СЕКРЕТНОЕ СООБЩЕНИЕ] Например: «Я знала, что ты расшифруешь это за пару минут…»",
+    },
     led27: "27 вспышек в минуту — по одной за каждый год.",
     text: [
       "Ты — embedded-программист: STM32, регистры, прерывания, DMA, таймеры и протоколы, о которых обычные люди даже не слышали. Твой код живёт не в браузере, а в железе — и работает там, где ошибаться нельзя.",
@@ -184,7 +224,7 @@ int main(void)
   SystemClock_Config();     /* разгоняем праздник до максимума */
   MX_ADC1_Init();           /* измерения */
   MX_TIM1_Init();           /* управление */
-  MX_USART2_UART_Init();    /* 115200 — чтобы поздравить */
+  MX_USART2_UART_Init();    /* PCLK1 = 42 MHz, BRR = 0x16D */
 
   /* С днём рождения, Антон!
    * Пусть измерения сходятся,
@@ -413,7 +453,7 @@ int main(void)
         title: "Пять из пяти",
         desc: "Забить все пять пенальти в одной серии",
       },
-      { id: "led", title: "27 в минуту", desc: "Найти пасхалку в светодиоде" },
+      { id: "led", title: "27 в минуту", desc: "Нажать кнопку USER на плате" },
       {
         id: "flash",
         title: "Прошито",
@@ -441,6 +481,12 @@ int main(void)
         desc: "Принять все задания из журнала",
       },
       { id: "music", title: "В дорогу", desc: "Включить музыку" },
+      {
+        id: "genius",
+        title: "Ты гений",
+        desc: "Расшифровать посылку в логическом анализаторе",
+        secret: true,
+      },
       {
         id: "loot",
         title: "Легендарный дроп",
@@ -1420,9 +1466,10 @@ int main(void)
     const led = $("#led");
     const board = led.ownerSVGElement;
     let slow = false;
-    const toggle = () => {
-      slow = !slow;
+    const setMode = (value) => {
+      slow = value;
       if (slow) unlock("led");
+      oled.notify(slow);
       board.style.setProperty(
         "--blink",
         slow ? (60 / 27).toFixed(3) + "s" : "1s",
@@ -1432,18 +1479,401 @@ int main(void)
         ? CONTENT.lab.led27
         : CONTENT.lab.ledHint;
     };
-    led.addEventListener("click", toggle);
-    led.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggle();
-      }
+    // Кнопка на плате: вдавливается при нажатии и выполняет действие
+    const pcbButton = (btn, action) => {
+      const press = () => {
+        btn.classList.add("is-pressed", "is-used");
+        setTimeout(() => btn.classList.remove("is-pressed"), 150);
+        action();
+      };
+      btn.addEventListener("click", press);
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          press();
+        }
+      });
+    };
+    pcbButton($("#userBtn"), () => setMode(!slow));
+    pcbButton($("#resetBtn"), () => {
+      led.classList.add("is-reset");
+      setTimeout(() => {
+        led.classList.remove("is-reset");
+        setMode(false);
+        $("#ledNote").textContent = CONTENT.lab.resetNote;
+      }, 600);
     });
 
     $("#firmware").innerHTML = highlightC(CONTENT.lab.firmware);
     initIdeTabs();
     initGitLog();
     initTerminal();
+    initOled();
+    initAnalyzer();
+  }
+
+  /* ---------- OLED-дисплей 128×64 ---------- */
+  const oled = { notify() {}, solve() {} };
+
+  function initOled() {
+    const O = CONTENT.lab.oled;
+    const cv = $("#oledCanvas");
+    const ctx = cv.getContext("2d");
+    const buf = document.createElement("canvas");
+    buf.width = 128;
+    buf.height = 64;
+    const b = buf.getContext("2d", { willReadFrequently: true });
+    const img = ctx.createImageData(128, 64);
+    const screens = ["fox", "age", "graph", "count", "uart"];
+    const graph = [];
+    const [bd, bm, by] = CONTENT.birthday.split(".").map(Number);
+    const birthday = new Date(by, bm - 1, bd);
+    const pad = (n) => String(n).padStart(2, "0");
+    let idx = 0;
+    let shownAt = performance.now();
+    let notice = null;
+    let running = false;
+    let lastDraw = 0;
+
+    const FONT = '"Press Start 2P", monospace';
+    const txt = (s, x, y, size = 8, align = "left") => {
+      b.font = `${size}px ${FONT}`;
+      b.textAlign = align;
+      b.fillText(s, x, y);
+    };
+    const header = (title) => {
+      txt(title, 0, 12);
+      txt("0x3C", 128, 12, 8, "right");
+    };
+    const poly = (pts) => {
+      b.beginPath();
+      pts.forEach(([x, y], i) => (i ? b.lineTo(x, y) : b.moveTo(x, y)));
+      b.closePath();
+      b.fill();
+    };
+    const drawFox = (x, y, s) => {
+      b.save();
+      b.translate(x, y);
+      b.scale(s, s);
+      poly([[2, 2], [36, 34], [68, 34], [102, 2], [104, 62], [84, 92], [52, 128], [20, 92], [0, 62]]);
+      b.fillStyle = "#000";
+      poly([[10, 18], [30, 36], [14, 52]]);
+      poly([[94, 18], [74, 36], [90, 52]]);
+      poly([[16, 60], [44, 70], [24, 76]]);
+      poly([[88, 60], [60, 70], [80, 76]]);
+      poly([[42, 112], [62, 112], [52, 126]]);
+      b.strokeStyle = "#000";
+      b.lineWidth = 6;
+      b.beginPath();
+      b.moveTo(0, 62);
+      b.lineTo(26, 80);
+      b.lineTo(52, 100);
+      b.lineTo(78, 80);
+      b.lineTo(104, 62);
+      b.stroke();
+      b.restore();
+      b.fillStyle = "#fff";
+    };
+
+    function scene(now) {
+      b.fillStyle = "#000";
+      b.fillRect(0, 0, 128, 64);
+      b.fillStyle = "#fff";
+      b.strokeStyle = "#fff";
+      if (notice && now < notice.until) {
+        header(notice.title);
+        txt(notice.big, 64, 44, 16, "center");
+        txt(notice.small, 64, 60, 8, "center");
+        return;
+      }
+      const t = now / 1000;
+      const name = screens[idx];
+      if (name === "fox") {
+        header("LIS-27");
+        drawFox(4, 19, 0.27);
+        txt(O.foxLine1, 42, 32);
+        txt(O.foxLine2, 42, 44);
+        b.font = `8px ${FONT}`;
+        b.textAlign = "left";
+        const w = b.measureText(O.marquee).width;
+        b.fillText(O.marquee, reduced ? 0 : Math.round(128 - ((t * 32) % (w + 128))), 62);
+      } else if (name === "age") {
+        header("AGE");
+        const forms = [["27", "DEC"], ["0x1B", "HEX"], ["0b11011", "BIN"]];
+        const [v, label] = forms[Math.floor(t / 1.5) % forms.length];
+        txt(v, 64, 44, 16, "center");
+        txt(label, 64, 60, 8, "center");
+      } else if (name === "graph") {
+        header("I_OUT, A");
+        graph.push(27 + (Math.random() - 0.5) * 0.0004);
+        if (graph.length > 128) graph.shift();
+        b.lineWidth = 1;
+        b.beginPath();
+        graph.forEach((v, i) => {
+          const y = Math.round(36 - (v - 27) * 40000) + 0.5;
+          i ? b.lineTo(i + 0.5, y) : b.moveTo(i + 0.5, y);
+        });
+        b.stroke();
+        txt("I=27.000 A", 64, 62, 8, "center");
+      } else if (name === "count") {
+        header(O.countTitle);
+        const diff = birthday - Date.now();
+        if (diff > 0) {
+          const s = Math.floor(diff / 1000);
+          const d = Math.floor(s / 86400);
+          const h = Math.floor((s % 86400) / 3600);
+          const m = Math.floor((s % 3600) / 60);
+          txt(`${O.countLeft} ${d} ДН`, 64, 32, 8, "center");
+          txt(`${pad(h)}:${pad(m)}:${pad(s % 60)}`, 64, 54, 16, "center");
+        } else if (diff > -864e5) {
+          txt(O.todayBig, 64, 42, 16, "center");
+          txt(O.todaySmall, 64, 58, 8, "center");
+        } else {
+          txt(O.afterBig, 64, 48, 16, "center");
+        }
+      } else if (name === "uart") {
+        header("UART TX");
+        txt("8N1 BRR=0x16D", 64, 32, 8, "center");
+        txt("PCLK1 42 MHZ", 64, 46, 8, "center");
+        txt(O.uartLine2, 64, 60, 8, "center");
+      } else if (name === "genius") {
+        header("D0 DECODED");
+        txt(O.genius1, 64, 38, 16, "center");
+        txt(O.genius2, 64, 58, 16, "center");
+        for (let i = 0; i < 12; i++) b.fillRect((Math.random() * 128) | 0, 17 + ((Math.random() * 46) | 0), 1, 1);
+      }
+    }
+
+    // Порог в 1 бит + двухцветная матрица: верхние 16 строк жёлтые, остальные голубые
+    function blit() {
+      const src = b.getImageData(0, 0, 128, 64).data;
+      const d = img.data;
+      for (let i = 0, p = 0; i < src.length; i += 4, p++) {
+        const on = src[i] > 160;
+        const top = p < 128 * 16;
+        d[i] = on ? (top ? 255 : 110) : 6;
+        d[i + 1] = on ? (top ? 208 : 205) : 9;
+        d[i + 2] = on ? (top ? 64 : 255) : 14;
+        d[i + 3] = 255;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+
+    const dots = $("#oledDots");
+    function renderDots() {
+      dots.textContent = "";
+      screens.forEach((_, i) => {
+        const dot = document.createElement("i");
+        if (i === idx) dot.className = "is-on";
+        dots.append(dot);
+      });
+    }
+    function draw(now) {
+      scene(now);
+      blit();
+    }
+    function go(i) {
+      idx = (i + screens.length) % screens.length;
+      shownAt = performance.now();
+      notice = null;
+      renderDots();
+      draw(performance.now());
+    }
+    function frame(now) {
+      if (!running) return;
+      if (now - lastDraw > 66) {
+        lastDraw = now;
+        const noticeOn = notice && now < notice.until;
+        if (!reduced && !noticeOn && now - shownAt > 5000) go(idx + 1);
+        else draw(now);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const box = $("#oled");
+    box.addEventListener("click", () => go(idx + 1));
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        go(idx + 1);
+      }
+    });
+
+    oled.notify = (slow) => {
+      notice = {
+        title: "LD2",
+        big: slow ? "27/МИН" : "60/МИН",
+        small: slow ? O.led27 : O.led60,
+        until: performance.now() + 2200,
+      };
+      shownAt = performance.now();
+      draw(performance.now());
+    };
+    oled.solve = () => {
+      if (!screens.includes("genius")) screens.push("genius");
+      go(screens.indexOf("genius"));
+      shownAt = performance.now() + 10000; // подольше задержаться на этом экране
+    };
+
+    renderDots();
+    draw(performance.now());
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load(`8px ${FONT}`).then(() => draw(performance.now()));
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => {
+        const on = en.isIntersecting;
+        if (on && !running) {
+          running = true;
+          requestAnimationFrame(frame);
+        } else if (!on) running = false;
+      }).observe(box);
+    }
+  }
+
+  /* ---------- Логический анализатор: настоящий UART-декодер ---------- */
+  function initAnalyzer() {
+    const A = CONTENT.lab.analyzer;
+    const bytes = Array.from(new TextEncoder().encode(A.answer));
+    const T = 1e6 / 115200; // длительность бита на реальной скорости, мкс
+    const PX = 7 / T; // пикселей на мкс: 7 px на бит
+    const gaps = [2, 1, 1, 3, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2, 1];
+
+    // Сигнал линии TX: старт-бит 0, 8 бит данных младшим вперёд, стоп-бит 1, паузы
+    const edges = [{ t: 0, v: 1 }];
+    let t = 6 * T;
+    const put = (v, dur) => {
+      if (edges[edges.length - 1].v !== v) edges.push({ t, v });
+      t += dur;
+    };
+    bytes.forEach((byte, i) => {
+      put(0, T);
+      for (let k = 0; k < 8; k++) put((byte >> k) & 1, T);
+      put(1, T + gaps[i % gaps.length] * T);
+    });
+    put(1, 8 * T);
+    const total = t;
+    const level = (x) => {
+      let v = 1;
+      for (const e of edges) {
+        if (e.t > x) break;
+        v = e.v;
+      }
+      return v;
+    };
+
+    // Декодер сэмплирует середину каждого бита на выбранной скорости
+    function decode(baud) {
+      const bt = 1e6 / baud;
+      const frames = [];
+      let x = 0;
+      for (let i = 1; i < edges.length; i++) {
+        const e = edges[i];
+        if (e.v !== 0 || e.t < x) continue;
+        const s = e.t;
+        if (s + 10 * bt > total) break;
+        if (level(s + 0.5 * bt) !== 0) continue;
+        let val = 0;
+        for (let k = 0; k < 8; k++) if (level(s + (1.5 + k) * bt)) val |= 1 << k;
+        frames.push({ s, e: s + 10 * bt, val, ok: level(s + 9.5 * bt) === 1 });
+        x = s + 9.5 * bt;
+      }
+      return frames;
+    }
+
+    const fmt = (v, f) => {
+      if (f === "hex") return v.toString(16).toUpperCase().padStart(2, "0");
+      if (f === "dec") return String(v);
+      if (v === 0x20) return "␣";
+      return (v > 0x20 && v < 0x7f) || v >= 0xa0 ? String.fromCharCode(v) : "·";
+    };
+
+    const svg = $("#laSvg");
+    const status = $("#laStatus");
+    const W = Math.ceil(total * PX) + 8;
+    const H = 104;
+    const X = (us) => us * PX + 4;
+    const Y = (v) => (v ? 56 : 92);
+    let baud = 57600;
+    let format = "hex";
+
+    function render() {
+      const frames = decode(baud);
+      let h = "";
+      for (let us = 10; us <= total; us += 10) {
+        if (us % 100) h += `<line class="la__minor" x1="${X(us).toFixed(1)}" y1="11" x2="${X(us).toFixed(1)}" y2="15"/>`;
+      }
+      for (let us = 0; us <= total; us += 100) {
+        const x = X(us).toFixed(1);
+        h += `<line class="la__grid" x1="${x}" y1="14" x2="${x}" y2="${H}"/>`;
+        h += `<text class="la__tick" x="${(X(us) + 3).toFixed(1)}" y="10">${us} µs</text>`;
+      }
+      frames.forEach((f) => {
+        const x = X(f.s);
+        const w = (f.e - f.s) * PX;
+        h += `<rect class="la__frame${f.ok ? "" : " is-err"}" x="${x.toFixed(1)}" y="20" width="${Math.max(1, w - 1).toFixed(1)}" height="18" rx="3"/>`;
+        if (w >= 16) h += `<text class="la__byte" x="${(x + w / 2).toFixed(1)}" y="33">${esc(fmt(f.val, format))}</text>`;
+      });
+      let d = `M4 ${Y(1)}`;
+      edges.slice(1).forEach((e) => {
+        d += ` H${X(e.t).toFixed(1)} V${Y(e.v)}`;
+      });
+      d += ` H${W - 4}`;
+      h += `<path class="la__wave" d="${d}"/>`;
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      svg.setAttribute("width", W);
+      svg.setAttribute("height", H);
+      svg.innerHTML = h;
+
+      const errs = frames.filter((f) => !f.ok).length;
+      const ok = errs === 0 && frames.length === bytes.length;
+      status.textContent = (ok ? A.statusOk : A.statusBad).replace("{n}", frames.length).replace("{e}", errs);
+      status.classList.toggle("is-ok", ok);
+    }
+
+    $("#laBaud").addEventListener("change", (e) => {
+      baud = +e.target.value;
+      render();
+    });
+    $$(".la__fmt .chip").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        format = btn.dataset.fmt;
+        $$(".la__fmt .chip").forEach((x) => x.setAttribute("aria-pressed", String(x === btn)));
+        render();
+      }),
+    );
+
+    // Ответ: регистр, «ё», пробелы и знаки препинания не важны
+    const norm = (s) => s.toLowerCase().replace(/ё/g, "е").replace(/[^a-zа-я0-9]/g, "");
+    $("#laForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = $("#laMsg");
+      if (norm($("#laInput").value) === norm(A.answer)) {
+        msg.textContent = "";
+        $("#laWin").hidden = false;
+        unlock("genius");
+        oled.solve();
+        confetti();
+      } else {
+        msg.textContent = A.wrong;
+      }
+    });
+
+    let hint = 0;
+    const hintBtn = $("#laHint");
+    const hintLabel = () => {
+      hintBtn.textContent = `${A.hintButton} ${Math.min(hint + 1, A.hints.length)}/${A.hints.length}`;
+    };
+    hintBtn.addEventListener("click", () => {
+      if (hint >= A.hints.length) return;
+      $("#laHintText").textContent = A.hints[hint];
+      hint++;
+      if (hint >= A.hints.length) hintBtn.disabled = true;
+      else hintLabel();
+    });
+    hintLabel();
+
+    render();
   }
 
   /* ---------- Вкладки UART / main.c / git log ---------- */

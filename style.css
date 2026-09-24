@@ -556,9 +556,23 @@ main { overflow-x: clip; }
 .chip-sub { font-family: var(--font-mono); font-size: 6.5px; fill: #8a857a; }
 .pcb-label { font-family: var(--font-mono); font-size: 7px; fill: #e9e2d0; opacity: .8; }
 .pcb-silk { font-family: var(--font-mono); font-size: 7px; fill: #e9e2d0; opacity: .45; letter-spacing: .1em; }
-.led { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.led:focus { outline: none; }
-.led:focus-visible rect:nth-child(3) { stroke: #fff; stroke-width: 1.5; }
+/* Кнопки на плате: USER переключает частоту, RESET возвращает 60 миг/мин */
+.pcb-btn { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.pcb-btn:focus { outline: none; }
+.pcb-btn:focus-visible .pcb-btn__base { stroke: #fff; stroke-width: 1.5; }
+.pcb-btn__cap { transform-box: fill-box; transform-origin: center; transition: transform .12s ease; }
+.pcb-btn.is-pressed .pcb-btn__cap { transform: scale(.75); }
+.pcb-btn__ring {
+  fill: none; stroke: var(--gold-hi); stroke-width: 1.5;
+  transform-box: fill-box; transform-origin: center;
+  animation: btn-ring 1.8s ease-out infinite;
+}
+.pcb-btn.is-used .pcb-btn__ring { display: none; }
+@keyframes btn-ring {
+  0% { transform: scale(.7); opacity: .9; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.led.is-reset .led__light, .led.is-reset .led__glow { animation: none; opacity: .06; }
 .led__light, .led__glow { animation: led-blink var(--blink, 1s) steps(1, end) infinite; }
 @keyframes led-blink {
   0% { opacity: 1; }
@@ -991,6 +1005,130 @@ main { overflow-x: clip; }
 }
 .finale__friends { margin: 0; color: var(--muted); font-style: italic; }
 
+/* ---------- OLED-дисплей на проводах I2C ---------- */
+.wires { display: block; width: 100%; height: auto; margin-top: -6px; }
+.oled {
+  position: relative;
+  width: 64%; margin: 0 0 0 18%;
+  padding: 16px 6% 12px;
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 5% 92%, #0b1733 3px, transparent 4px),
+    radial-gradient(circle at 95% 92%, #0b1733 3px, transparent 4px),
+    linear-gradient(180deg, #1d418d, #132d66);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .08);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.oled:focus { outline: none; }
+.oled:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
+.oled__pins span {
+  position: absolute; top: -5px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono); font-size: 7px; line-height: 1;
+  color: rgba(255, 255, 255, .75);
+  text-align: center;
+}
+.oled__pins span::before {
+  content: ""; display: block;
+  width: 9px; height: 9px; margin: 0 auto 2px;
+  border-radius: 50%;
+  background: #d4a74a; box-shadow: inset 0 0 0 2px #8c6423;
+}
+.oled__pins span:nth-child(1) { left: 32%; }
+.oled__pins span:nth-child(2) { left: 44%; }
+.oled__pins span:nth-child(3) { left: 56%; }
+.oled__pins span:nth-child(4) { left: 68%; }
+.oled__glass {
+  margin-top: 6px;
+  padding: 5%;
+  border-radius: 3px;
+  background: #05070b;
+  box-shadow: inset 0 0 0 2px #0b0e14, 0 0 0 3px #2b2f36;
+}
+.oled__glass canvas {
+  display: block; width: 100%; height: auto; aspect-ratio: 2 / 1;
+  image-rendering: pixelated; image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 2px rgba(110, 205, 255, .5));
+}
+.oled__dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+.oled__dots i { width: 6px; height: 6px; border-radius: 50%; background: #3a2e22; }
+.oled__dots i.is-on { background: var(--gold); }
+.oled__hint { margin: 6px 0 0; text-align: center; font-size: .85rem; font-style: italic; color: var(--muted); }
+
+/* ---------- Логический анализатор ---------- */
+.ide__panel--la { height: auto; overflow: visible; }
+.la { padding: 12px; font-size: .92rem; }
+.la__intro { margin: 0 0 12px; color: var(--muted); font-style: italic; }
+.la__bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.la__field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.la__field--wide { grid-column: 1 / -1; }
+.la__field > span { font-family: var(--font-head); font-weight: 700; font-size: .85rem; letter-spacing: .12em; color: var(--gold); }
+.la__field b { padding: 8px 0; font-family: var(--font-mono); font-weight: 400; font-size: .9rem; color: var(--ink); }
+.la__select {
+  min-height: 40px;
+  padding: 6px 8px;
+  border: 1px solid var(--gold-deep); border-radius: var(--radius);
+  background: #1a130e;
+  color: var(--gold-hi);
+  font-family: var(--font-mono); font-size: 16px;
+}
+.la__fmt { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.la__fmt .chip[aria-pressed="true"] { border-color: var(--gold); background: linear-gradient(180deg, #f1d38a, #c9962f); color: var(--ink-dark); font-weight: 700; }
+.la__scope { display: flex; border: 1px solid #2a2119; border-radius: var(--radius); background: #07090b; overflow: hidden; }
+.la__labels {
+  flex: none; width: 54px;
+  display: flex; flex-direction: column;
+  border-right: 1px solid #2a2119;
+  font-family: var(--font-mono); font-size: .66rem; color: var(--muted);
+}
+.la__labels span:nth-child(1) { height: 16px; }
+.la__labels span:nth-child(2) { height: 28px; display: flex; align-items: center; padding-left: 6px; color: #6fe3a1; }
+.la__labels span:nth-child(3) { flex: 1; display: flex; align-items: center; padding-left: 6px; color: var(--gold-hi); }
+.la__scroll { flex: 1; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.la__scroll svg { display: block; max-width: none; }
+.la__grid { stroke: rgba(255, 255, 255, .06); }
+.la__minor { stroke: #6f6352; stroke-width: 1; }
+.la__tick { font-family: var(--font-mono); font-size: 9px; fill: #6f6352; }
+.la__frame { fill: rgba(111, 227, 161, .16); stroke: #6fe3a1; stroke-width: 1; }
+.la__frame.is-err { fill: rgba(233, 161, 154, .16); stroke: #e9a19a; }
+.la__byte { font-family: var(--font-mono); font-size: 11px; font-weight: 700; fill: #cfe3c4; text-anchor: middle; }
+.la__wave { fill: none; stroke: #6fe3a1; stroke-width: 1.6; }
+.la__status { margin: 8px 0 0; font-family: var(--font-mono); font-size: .8rem; color: #e9a19a; }
+.la__status.is-ok { color: #9fd18b; }
+.la__answer { margin-top: 16px; }
+.la__answer label { display: block; margin-bottom: 6px; font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; color: var(--gold-hi); }
+.la__row { display: flex; gap: 8px; }
+.la__row input {
+  flex: 1; min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--gold-deep); border-radius: var(--radius);
+  background: #15110d;
+  color: var(--ink);
+  font-family: var(--font-mono); font-size: 16px;
+}
+.la__row input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212, 167, 74, .2); }
+.la__row .chip { flex: none; padding: 4px 16px; grid-column: auto; }
+.la__msg { min-height: 1.3em; margin: 6px 0 0; font-size: .85rem; color: #e9a19a; }
+.la__foot { display: flex; align-items: flex-start; gap: 10px; margin-top: 4px; }
+.la__foot .chip { flex: none; }
+.la__hint { margin: 0; padding-top: 8px; font-size: .88rem; font-style: italic; color: var(--muted); }
+.la__win {
+  margin-top: 16px; padding: 14px 16px;
+  border: 1px solid #d9822b; border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(217, 130, 43, .16), rgba(29, 22, 17, .6));
+  box-shadow: 0 0 24px rgba(217, 130, 43, .2);
+}
+.la__win:not([hidden]) { animation: loot-in .6s cubic-bezier(.2, .8, .2, 1.1) both; }
+.la__win-title { margin: 0 0 6px; font-family: var(--font-head); font-weight: 700; font-size: 1.45rem; color: #f0a04b; }
+.la__win p:last-child { margin: 0; }
+
+/* Вкладок четыре: на телефоне сеткой 2×2 (без уголка-указателя), шире — в один ряд */
+.ide__tabs { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 559px) {
+  .ide__tab[aria-selected="true"]::after { display: none; }
+}
+
 /* =========================================================
    ДОСТИЖЕНИЯ: плашки и зал трофеев
    ========================================================= */
@@ -1095,6 +1233,7 @@ main { overflow-x: clip; }
    Шире телефона
    ========================================================= */
 @media (min-width: 560px) {
+  .ide__tabs { grid-template-columns: repeat(4, 1fr); }
   body { font-size: 18px; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
   .scarves { flex-direction: row; }
