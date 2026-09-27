@@ -974,28 +974,46 @@ main { overflow-x: clip; }
 }
 #tavernPlay { margin-top: 26px; }
 
-/* ноты для фортепиано: листок пергамента со ссылкой на PDF */
+/* ноты для фортепиано: свёрнутая карточка + просмотр страниц в окне */
 .sheet {
   display: flex; align-items: center; gap: 14px;
-  max-width: 520px; margin: 28px auto 0; padding: 14px 16px;
+  width: 100%; max-width: 520px; margin: 28px auto 0; padding: 14px 16px;
+  border: 0; border-radius: var(--radius);
   background: var(--parchment); color: var(--ink-dark);
-  border-radius: var(--radius);
   box-shadow: 0 8px 18px rgba(0, 0, 0, .45);
-  text-decoration: none;
-  transform: rotate(-.6deg);
+  font: inherit; text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.sheet:hover, .sheet:focus-visible { transform: rotate(0) translateY(-2px); box-shadow: 0 12px 24px rgba(0, 0, 0, .5); }
+.sheet:hover, .sheet:focus-visible { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 0, 0, .5); }
 .sheet:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
 .sheet__icon { flex: 0 0 64px; width: 64px; height: 48px; }
 .sheet__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: .92rem; line-height: 1.35; }
 .sheet__text b { font-family: var(--font-head); font-size: 1.1rem; color: var(--crimson); }
 .sheet__go { flex: 0 0 auto; font-family: var(--font-head); font-weight: 700; font-size: .9rem; color: var(--ink-dark-2); white-space: nowrap; }
 .sheet__go::after { content: " →"; }
+.sheet__num { font-family: var(--font-mono); font-size: .85rem; color: var(--ink-dark-2); min-width: 3.5em; text-align: center; }
 @media (max-width: 420px) {
   .sheet { flex-wrap: wrap; }
   .sheet__go { width: 100%; text-align: right; }
 }
+
+.sheet-view {
+  width: min(96vw, 900px); max-width: none; height: 94vh; max-height: none;
+  margin: auto; padding: 0;
+  border: 1px solid var(--gold-deep); border-radius: var(--radius);
+  background: var(--parchment); color: var(--ink-dark);
+  overflow: hidden;
+}
+.sheet-view[open] { display: flex; flex-direction: column; }
+.sheet-view::backdrop { background: rgba(8, 6, 4, .82); }
+.sheet-view__bar { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px; border-bottom: 1px solid rgba(90, 65, 39, .3); }
+.sheet-view__bar .chip { min-width: 40px; }
+.sheet-view__close { margin-left: auto; }
+.sheet-view__bar .chip:first-child { margin-left: auto; }
+.sheet-view__scroll { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; }
+.sheet-view__scroll img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
 
 /* доска заказов */
 .notices__title {

@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
   <!-- ?v= — версия файлов: увеличь число после правок, чтобы браузеры не брали старую копию из кэша -->
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=33">
 </head>
 <body class="is-locked">
 
@@ -962,8 +962,8 @@
     <div class="prose reveal" data-paras="music.text"></div>
     <p class="center reveal"><button class="btn" id="tavernPlay" type="button">Попросить барда спеть</button></p>
 
-    <!-- Ноты песни для фортепиано -->
-    <a class="sheet reveal" id="sheetLink" href="notes/wolven-storm.pdf" target="_blank" rel="noopener">
+    <!-- Ноты песни для фортепиано: свёрнуты в карточку, открываются по нажатию -->
+    <button class="sheet reveal" id="sheetOpen" type="button" aria-haspopup="dialog">
       <svg class="sheet__icon" viewBox="0 0 64 48" aria-hidden="true">
         <g stroke="#5a4127" stroke-width="1"><path d="M4 12 H60 M4 17 H60 M4 22 H60 M4 27 H60 M4 32 H60"/></g>
         <path d="M8 8 C14 14 6 22 12 28 C16 34 8 38 10 42" fill="none" stroke="#2c1e12" stroke-width="1.6"/>
@@ -979,7 +979,16 @@
         <span data-text="music.sheet.text"></span>
       </span>
       <span class="sheet__go" data-text="music.sheet.button"></span>
-    </a>
+    </button>
+    <dialog class="sheet-view" id="sheetView" aria-label="Ноты">
+      <div class="sheet-view__bar">
+        <button class="chip" id="sheetViewPrev" type="button" aria-label="Предыдущая страница">‹</button>
+        <span class="sheet__num" id="sheetViewNum"></span>
+        <button class="chip" id="sheetViewNext" type="button" aria-label="Следующая страница">›</button>
+        <button class="chip sheet-view__close" id="sheetClose" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <div class="sheet-view__scroll"><img id="sheetBig" alt=""></div>
+    </dialog>
 
     <h3 class="notices__title reveal" data-text="music.boardTitle"></h3>
     <ul class="notices reveal" id="tavernBoard"></ul>
@@ -1170,6 +1179,6 @@
 
 <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
-<script src="script.js?v=31"></script>
+<script src="script.js?v=33"></script>
 </body>
 </html>

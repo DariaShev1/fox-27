@@ -461,11 +461,16 @@ int main(void)
       "Сюда заходят после долгого заказа: у камина сохнут сапоги, на доске висят объявления, а бард настраивает лютню. Сегодня здесь поют для тебя.",
       "Песня Присциллы, та самая, под которую затихает весь зал.",
     ],
-    // Ноты для фортепиано: файл лежит в notes/, открывается в новой вкладке
+    // Ноты для фортепиано: страницы-картинки в notes/. Свёрнуты в карточку, открываются по нажатию.
     sheet: {
       title: "Ноты «The Wolven Storm»",
       text: "Для фортепиано. Бард спел — теперь твоя очередь.",
       button: "Открыть ноты",
+      pages: [
+        "notes/wolven-storm-1.png",
+        "notes/wolven-storm-2.png",
+        "notes/wolven-storm-3.png",
+      ],
     },
     boardTitle: "Доска заказов",
     // Объявления на доске: title — заголовок, text — текст, reward — награда
@@ -2715,6 +2720,37 @@ int main(void)
     });
   }
 
+  /* ---------- Ноты: карточка, по нажатию — просмотр страниц ---------- */
+  function initSheet() {
+    const pages = CONTENT.music.sheet.pages;
+    const big = $("#sheetBig");
+    const view = $("#sheetView");
+    let page = 0;
+    const show = (n) => {
+      page = (n + pages.length) % pages.length;
+      big.src = pages[page];
+      big.alt = `Ноты, страница ${page + 1}`;
+      $("#sheetViewNum").textContent = `${page + 1} / ${pages.length}`;
+      $(".sheet-view__scroll").scrollTop = 0;
+    };
+    $("#sheetViewPrev").addEventListener("click", () => show(page - 1));
+    $("#sheetViewNext").addEventListener("click", () => show(page + 1));
+    $("#sheetOpen").addEventListener("click", () => {
+      show(0);
+      if (view.showModal) view.showModal();
+      else window.open(pages[page], "_blank", "noopener");
+    });
+    $("#sheetClose").addEventListener("click", () => view.close());
+    // клик по затемнению вокруг листа закрывает просмотр
+    view.addEventListener("click", (e) => {
+      if (e.target === view) view.close();
+    });
+    view.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") show(page + 1);
+      if (e.key === "ArrowLeft") show(page - 1);
+    });
+  }
+
   /* ---------- Запуск ---------- */
   fillTexts();
   initAchievements();
@@ -2728,6 +2764,7 @@ int main(void)
   initCola();
   initLoot();
   initDragonEgg();
+  initSheet();
   initRaven();
   initQuests();
   initPlayer();
