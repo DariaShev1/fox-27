@@ -41,6 +41,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
+  /* не «наклонять» шрифты, у которых нет курсива: иначе смайлики в курсивном тексте падают набок */
+  font-synthesis: weight;
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -1193,7 +1195,7 @@ main { overflow-x: clip; }
 .player__vol input { width: 76px; accent-color: var(--gold); }
 
 .to-map {
-  position: fixed; right: var(--gutter); bottom: calc(var(--player-h) + env(safe-area-inset-bottom) + 14px); z-index: 49;
+  position: fixed; right: var(--gutter); bottom: calc(env(safe-area-inset-bottom) + 16px); z-index: 49;
   width: 46px; height: 46px;
   display: grid; place-items: center;
   border: 1px solid var(--gold-deep); border-radius: 50%;
@@ -1201,9 +1203,10 @@ main { overflow-x: clip; }
   color: var(--gold-hi);
   box-shadow: 0 6px 16px rgba(0, 0, 0, .5);
   opacity: 0; pointer-events: none; transform: translateY(10px);
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity .3s ease, transform .3s ease, bottom .5s ease;
 }
 .to-map svg { width: 22px; height: 22px; }
+.has-player .to-map { bottom: calc(var(--player-h) + env(safe-area-inset-bottom) + 14px); }
 .to-map.is-shown { opacity: 1; pointer-events: auto; transform: none; }
 
 /* =========================================================
