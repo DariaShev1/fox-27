@@ -615,6 +615,11 @@ int main(void)
       },
       { id: "music", title: "Бард, играй!", desc: "Попросить песню в таверне" },
       {
+        id: "iron",
+        title: "Техника безопасности",
+        desc: "Потрогать горячий паяльник в таверне. Все четыре раза",
+      },
+      {
         id: "genius",
         title: "Ты гений",
         desc: "Расшифровать посылку в логическом анализаторе",
@@ -2801,7 +2806,10 @@ int main(void)
     const raven = $("#raven");
     const letter = $("#letter");
     const btn = $("#sealBtn");
+    const fin = $("#final");
+    // пока печать цела, ниже ничего нет: сначала письмо, потом сундук, фото и медальон
     letter.classList.add("is-sealed");
+    fin.classList.add("is-sealed");
     btn.addEventListener("click", () => {
       btn.disabled = true;
       raven.classList.add("is-broken");
@@ -2809,6 +2817,7 @@ int main(void)
       setTimeout(
         () => {
           letter.classList.remove("is-sealed");
+          fin.classList.remove("is-sealed");
           letter.classList.add("is-unrolling");
           raven.classList.add("is-gone");
           letter.scrollIntoView({
@@ -2968,6 +2977,7 @@ int main(void)
       pop = document.createElement("span");
       pop.className = "tavern__hot";
       pop.textContent = lines[i++ % lines.length];
+      if (i >= lines.length) unlock("iron");
       host.append(pop);
       // над паяльником, но в пределах картинки
       const cx = btn.offsetLeft + btn.offsetWidth / 2;
