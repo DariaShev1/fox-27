@@ -130,6 +130,8 @@ const CONTENT = {
       //uartLine2: "ДЕКОДИРУЙ МЕНЯ",
       led27: "ПО РАЗУ ЗА ГОД",
       led60: "ОБЫЧНЫЙ РЕЖИМ",
+      coffee1: "КОФЕ", // экран с чашкой: до 8 символов в строке
+      coffee2: "100%",
       genius1: "ТЫ", // крупно, до 8 символов в строке
       genius2: "ГЕНИЙ!",
     },
@@ -169,6 +171,7 @@ const CONTENT = {
     uart: {
       boot: [
         "LIS-27 bootloader v27.0",
+        "Кофе: первая чашка ........ OK",
         "SYSCLK 168 MHz ............ OK",
         "ADC1 / TIM1 / USART2 ...... OK",
         "Источник: готов, все защиты в норме",
@@ -180,6 +183,7 @@ const CONTENT = {
         "measure     — снять измерения",
         "flash       — прошить новую версию",
         "git status  — что в репозитории",
+        "coffee      — с чего начинается день",
         "wish        — главное сообщение",
         "clear       — очистить экран",
       ],
@@ -203,6 +207,16 @@ const CONTENT = {
         "источник держит уставку, мерж проходит без конфликтов,",
         "а самые сложные баги находятся за пять минут.",
       ],
+      // Команда coffee: картинка чашки и подпись
+      coffee: [
+        "     ( (",
+        "      ) )",
+        "   ........",
+        "   |      |]",
+        "   \\      /",
+        "    `----'",
+        "Кофе готов. Теперь можно и в прод.",
+      ],
       measureDone:
         "Стабильность в допуске. Источник держит уставку. Измерения сходятся.",
       flashDone: "Антон v27.0 прошит успешно. Перезагрузка в новый год жизни…",
@@ -219,11 +233,13 @@ const CONTENT = {
 #include "adc.h"           
 #include "tim.h"           
 #include "usart.h"        
-#include "source_ctrl.h"   
+#include "source_ctrl.h"
+#include "coffee.h"
 
 #define AGE          27U          /* лет в продакшене без критических багов */
 #define COLA_mL      UINT32_MAX   /* годовой запас колы, переполнения не ожидается */
 #define I_SET_mA     27000U       /* уставка тока источника */
+#define COFFEE_CUPS  1U           /* минимум, иначе день не стартует */
 
 static volatile uint32_t happiness = 0;
 
@@ -231,6 +247,7 @@ void SystemClock_Config(void);   /* реализация ниже, сгенер�
 
 int main(void)
 {
+  Coffee_Brew(COFFEE_CUPS); /* первым делом — ещё до HAL_Init() */
   HAL_Init();
   SystemClock_Config();     /* разгоняем праздник до максимума */
   MX_ADC1_Init();           /* измерения */
@@ -302,7 +319,7 @@ int main(void)
       {
         g: "*",
         hash: "4a11e5d",
-        msg: "feat: любовь к футболу, к Павлодару и к коле",
+        msg: "feat: любовь к футболу, к Павлодару, к коле и к утреннему кофе",
       },
       { g: "*", hash: "0000001", msg: "init: Павлодар", date: "29.09.1999" },
     ],
@@ -313,6 +330,18 @@ int main(void)
     lead: "Средиземье, Континент и Вестерос — ты был везде. Вытяни книгу с полки.",
     // series: 'lotr' | 'witcher' | 'got' — задаёт оформление корешка
     books: [
+      {
+        series: "silm",
+        title: "Сильмариллион",
+        vol: "",
+        note: "Прочитать его — уже подвиг. А не путать Финголфина с Финарфином — вообще легенда.",
+      },
+      {
+        series: "hobbit",
+        title: "Хоббит",
+        vol: "",
+        note: "Туда и обратно — прямо как ты каждый раз из Павлодара. Только без дракона на сокровищах.",
+      },
       {
         series: "lotr",
         title: "Братство Кольца",
@@ -387,6 +416,28 @@ int main(void)
         "Ещё немного…",
         "Дракон вылупился! Теперь ты точно из дома Таргариенов. Имя придумай сам.",
       ],
+    },
+  },
+
+  // --- 7¾. Средиземье: Сильмариллы, маяки Гондора ------------------
+  middleEarth: {
+    title: "Средиземье",
+    lead: "Отдельная любовь — от Сильмариллиона до последней страницы «Возвращения короля». Здесь горят маяки и спрятано кое-что, что светится ярче звёзд.",
+    silmarils: {
+      title: "Сильмариллы",
+      // Камни спрятаны по странице: в небе над Павлодаром, в водах Иртыша на карте и в огне камина в таверне
+      hint: "Железная корона, три гнезда пусты. Один камень сияет в небе, другой скрыт в водах, третий — в огне. Все они где-то на странице.",
+      found: "Сильмарилл найден! {n} из 3",
+      count: "Найдено: {n} из 3",
+      done: "Все три Сильмарилла снова в короне. Только, пожалуйста, без клятв — просто порадуйся.",
+    },
+    beacons: {
+      title: "Маяки Гондора",
+      text: "Семь костров на вершинах от Минас-Тирита до Рохана. Зажги первый — остальные подхватят.",
+      button: "Зажечь маяки",
+      call: "Маяки Гондора зажжены! Гондор зовёт на помощь.",
+      answer: "— И Рохан ответит.",
+      promise: "Если когда-нибудь зажгутся твои маяки — знай, я приду ❤",
     },
   },
 
@@ -472,6 +523,13 @@ int main(void)
         "notes/wolven-storm-3.png",
       ],
     },
+    // Что пишет паяльник на стойке, если на него нажать (по кругу)
+    iron: [
+      "Осторожно, горячо! 350°",
+      "Ай! Жало всё ещё 350°",
+      "Флюс закончился, остался только кофе",
+      "Паяльник не игрушка. Но тебе можно.",
+    ],
     boardTitle: "Доска заказов",
     // Объявления на доске: title — заголовок, text — текст, reward — награда
     board: [
@@ -563,6 +621,12 @@ int main(void)
         secret: true,
       },
       {
+        id: "silmarils",
+        title: "Клятва Феанора",
+        desc: "Найти все три Сильмарилла",
+        secret: true,
+      },
+      {
         id: "dragon",
         title: "Кровь дракона",
         desc: "Высидеть драконье яйцо",
@@ -597,7 +661,7 @@ int main(void)
     name: "Доспех Шипучего Лиса",
     type: "Легендарная броня · уникальный предмет",
     stats: ["+100 к уюту", "Сопротивление холоду: высокое"],
-    rune: "C•••••••K", // руна на груди: первая и последняя буква надписи
+    rune: "••••••••K", // руна на груди: последняя буква надписи
     runeNote: "Руна на груди. Расшифровка — при получении.",
     flavor:
       "Этот предмет не выпадает ни в одном подземелье. Он ждёт тебя в реальном мире — выдаётся лично в руки.",
@@ -1618,7 +1682,7 @@ int main(void)
     buf.height = 64;
     const b = buf.getContext("2d", { willReadFrequently: true });
     const img = ctx.createImageData(128, 64);
-    const screens = ["fox", "age", "graph", "count", "uart"];
+    const screens = ["fox", "coffee", "age", "graph", "count", "uart"];
     const graph = [];
     const [bd, bm, by] = CONTENT.birthday.split(".").map(Number);
     const birthday = new Date(by, bm - 1, bd);
@@ -1763,6 +1827,26 @@ int main(void)
         } else {
           txt(O.afterBig, 64, 48, 16, "center");
         }
+      } else if (name === "coffee") {
+        header("MORNING");
+        // чашка с блюдцем и ручкой
+        b.lineWidth = 1;
+        b.strokeRect(12.5, 30.5, 26, 22);
+        b.fillRect(14, 36, 24, 16); // кофе в чашке
+        b.strokeRect(38.5, 34.5, 6, 10);
+        b.fillRect(6, 55, 40, 2);
+        // пар над чашкой
+        for (let k = 0; k < 3; k++) {
+          for (let y = 18; y < 29; y++) {
+            const x =
+              18 +
+              k * 7 +
+              Math.round(Math.sin((y + t * 8 + k * 3) / 2.2) * 1.5);
+            b.fillRect(x, y, 1, 1);
+          }
+        }
+        txt(O.coffee1, 58, 38);
+        txt(O.coffee2, 58, 52);
       } else if (name === "uart") {
         header("UART TX");
         txt("BRR=0x16D", 64, 32, 8, "center");
@@ -2134,6 +2218,15 @@ int main(void)
       status: () => printAll(U.status),
       "git status": () => printAll(U.gitStatus),
       wish: () => printAll(U.wish, "wish"),
+      coffee: async () => {
+        const bar = print("");
+        for (let p = 0; p <= 100; p += 20) {
+          bar.textContent = `Brewing  [${"#".repeat(p / 20)}${".".repeat(5 - p / 20)}] ${p}%`;
+          await wait(220);
+        }
+        printAll(U.coffee.slice(0, -1));
+        print(U.coffee[U.coffee.length - 1], "ok");
+      },
       clear: () => {
         out.textContent = "";
       },
@@ -2164,6 +2257,7 @@ int main(void)
       },
     };
     commands.git = commands["git status"];
+    commands["кофе"] = commands.coffee;
 
     async function run(raw) {
       const cmd = raw.trim().toLowerCase().replace(/\s+/g, " ");
@@ -2223,18 +2317,23 @@ int main(void)
     lotr: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width=".8" opacity=".6"/></svg>',
     witcher:
       '<svg viewBox="0 0 24 24"><path d="M5 3l14 18M19 3L5 21M3 17l4 4M17 21l4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    hobbit:
+      '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><path d="M12 3.5v17M3.5 12h17" stroke="currentColor" stroke-width=".8" opacity=".5"/></svg>',
+    silm: '<svg viewBox="0 0 24 24"><path d="M12 2l1.8 6.2L20 6l-3.6 5.1L22 12l-5.6.9L20 18l-6.2-2.2L12 22l-1.8-6.2L4 18l3.6-5.1L2 12l5.6-.9L4 6l6.2 2.2z" fill="currentColor"/></svg>',
     got: '<svg viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 5l-2.5-2M12 5l2.5-2M12 19l-2.5 2M12 19l2.5 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
   };
   const SERIES = {
     lotr: { c: "#2f3b22", band: "#d4a74a", w: 54 },
     witcher: { c: "#26262b", band: "#cfcfd4", w: 70 },
     got: { c: "#5a1d1d", band: "#e7c77a", w: 58 },
+    hobbit: { c: "#5b3a1e", band: "#e7c77a", w: 46 },
+    silm: { c: "#1c2a4a", band: "#dfe7f2", w: 62 },
   };
 
   function initShelf() {
     const shelf = $("#shelf");
     const note = $("#shelfNote");
-    const heights = [252, 262, 274, 280, 258];
+    const heights = [276, 232, 252, 262, 274, 280, 258];
     const pulled = new Set();
     CONTENT.worlds.books.forEach((b, i) => {
       const s = SERIES[b.series] || SERIES.lotr;
@@ -2751,6 +2850,142 @@ int main(void)
     });
   }
 
+  /* ---------- Средиземье: три Сильмарилла, спрятанные по странице ---------- */
+  const SIL_KEY = "fox27-silmarils";
+  function initSilmarils() {
+    const S = CONTENT.middleEarth.silmarils;
+    // где лежат камни: контейнер и позиция в процентах (небо, воды Иртыша, огонь камина)
+    const spots = [
+      { sel: ".skyline", left: "9%", top: "14%" },
+      { sel: ".worldmap", left: "45%", top: "77%" },
+      { sel: ".tavern", left: "15.5%", top: "70%" },
+    ];
+    let found = new Set();
+    try {
+      found = new Set(JSON.parse(localStorage.getItem(SIL_KEY) || "[]"));
+    } catch (e) {}
+    const save = () => {
+      try {
+        localStorage.setItem(SIL_KEY, JSON.stringify([...found]));
+      } catch (e) {}
+    };
+    const render = () => {
+      $$(".crown__socket").forEach((g) =>
+        g.classList.toggle("is-found", found.has(+g.dataset.i)),
+      );
+      $("#crownText").textContent = found.size === 3 ? S.done : S.hint;
+      $("#crownCount").textContent = S.count.replace("{n}", found.size);
+      $("#crown").classList.toggle("is-complete", found.size === 3);
+    };
+    const gems = spots.map((sp, i) => {
+      const host = $(sp.sel);
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "silmaril";
+      b.style.left = sp.left;
+      b.style.top = sp.top;
+      b.setAttribute("aria-label", "Сильмарилл");
+      b.innerHTML =
+        '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1 L17 7 L10 19 L3 7 Z" fill="url(#g-silmaril)"/><path d="M3 7 H17 M10 1 L7 7 L10 19 L13 7 Z" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".6"/></svg>';
+      b.hidden = found.has(i);
+      b.addEventListener("click", () => {
+        if (found.has(i)) return;
+        found.add(i);
+        save();
+        b.classList.add("is-taken");
+        const pop = document.createElement("span");
+        pop.className = "silmaril__pop";
+        pop.textContent = S.found.replace("{n}", found.size);
+        host.append(pop);
+        // над камнем, по центру, но не выходя за края картинки; если сверху места нет — под камнем
+        const cx = b.offsetLeft + b.offsetWidth / 2;
+        const gy = b.offsetTop;
+        const x = Math.max(
+          6,
+          Math.min(
+            host.clientWidth - pop.offsetWidth - 6,
+            cx - pop.offsetWidth / 2,
+          ),
+        );
+        let y = gy - pop.offsetHeight - 8;
+        if (y < 6) y = gy + b.offsetHeight + 8;
+        pop.style.left = x + "px";
+        pop.style.top = y + "px";
+        setTimeout(() => pop.remove(), 2200);
+        setTimeout(() => (b.hidden = true), reduced ? 0 : 700);
+        render();
+        if (found.size === 3) {
+          unlock("silmarils");
+          confetti();
+        }
+      });
+      host.append(b);
+      return b;
+    });
+    // «Сбросить» в зале трофеев возвращает камни на места
+    $("#trophyReset").addEventListener("click", () => {
+      found.clear();
+      save();
+      gems.forEach((b) => {
+        b.hidden = false;
+        b.classList.remove("is-taken");
+      });
+      render();
+    });
+    render();
+  }
+
+  /* ---------- Средиземье: маяки Гондора ---------- */
+  function initBeacons() {
+    const btn = $("#beaconBtn");
+    const list = $$(".beacon");
+    btn.addEventListener("click", () => {
+      btn.disabled = true;
+      list.forEach((b, i) =>
+        setTimeout(() => b.classList.add("is-lit"), reduced ? 0 : i * 420),
+      );
+      setTimeout(
+        () => {
+          $("#beaconDone").hidden = false;
+          btn.hidden = true;
+        },
+        reduced ? 0 : list.length * 420 + 200,
+      );
+    });
+  }
+
+  /* ---------- Таверна: горячий паяльник на стойке ---------- */
+  function initSolderIron() {
+    const btn = $("#solderBtn");
+    const host = btn.parentElement;
+    const lines = CONTENT.music.iron;
+    let i = 0;
+    let pop = null;
+    btn.addEventListener("click", () => {
+      if (pop) pop.remove();
+      pop = document.createElement("span");
+      pop.className = "tavern__hot";
+      pop.textContent = lines[i++ % lines.length];
+      host.append(pop);
+      // над паяльником, но в пределах картинки
+      const cx = btn.offsetLeft + btn.offsetWidth / 2;
+      const x = Math.max(
+        6,
+        Math.min(
+          host.clientWidth - pop.offsetWidth - 6,
+          cx - pop.offsetWidth / 2,
+        ),
+      );
+      pop.style.left = x + "px";
+      pop.style.top = Math.max(6, btn.offsetTop - pop.offsetHeight - 6) + "px";
+      const mine = pop;
+      setTimeout(() => {
+        mine.remove();
+        if (pop === mine) pop = null;
+      }, 2200);
+    });
+  }
+
   /* ---------- Запуск ---------- */
   fillTexts();
   initAchievements();
@@ -2765,6 +3000,9 @@ int main(void)
   initLoot();
   initDragonEgg();
   initSheet();
+  initSolderIron();
+  initSilmarils();
+  initBeacons();
   initRaven();
   initQuests();
   initPlayer();
