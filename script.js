@@ -203,9 +203,9 @@ const CONTENT = {
       ],
       wish: [
         "С днём рождения!!!",
-        "Пусть измерения сходятся с первого раза,",
-        "источник держит уставку, мерж проходит без конфликтов,",
-        "а самые сложные баги находятся за пять минут.",
+        "Пусть измерения сходятся, источник держит уставку,",
+        "мерж проходит без конфликтов,",
+        "а после работы всегда остаются силы на футбол ⚽",
       ],
       // Команда coffee: картинка чашки и подпись
       coffee: [
@@ -2214,6 +2214,11 @@ int main(void)
       out.scrollTop = out.scrollHeight;
       return div;
     };
+    // обновить строку (полоску прогресса) и сразу докрутить терминал вниз, чтобы её было видно
+    const setLine = (el, text) => {
+      el.textContent = text;
+      out.scrollTop = out.scrollHeight;
+    };
     const printAll = (lines, cls) =>
       (lines || []).forEach((t) => print(t, cls));
 
@@ -2225,7 +2230,7 @@ int main(void)
       coffee: async () => {
         const bar = print("");
         for (let p = 0; p <= 100; p += 20) {
-          bar.textContent = `Brewing  [${"#".repeat(p / 20)}${".".repeat(5 - p / 20)}] ${p}%`;
+          setLine(bar, `Brewing  [${"#".repeat(p / 20)}${".".repeat(5 - p / 20)}] ${p}%`);
           await wait(220);
         }
         printAll(U.coffee.slice(0, -1));
@@ -2251,7 +2256,7 @@ int main(void)
         await wait(500);
         const bar = print("");
         for (let p = 0; p <= 100; p += 10) {
-          bar.textContent = `Writing  [${"#".repeat(p / 10)}${".".repeat(10 - p / 10)}] ${p}%`;
+          setLine(bar, `Writing  [${"#".repeat(p / 10)}${".".repeat(10 - p / 10)}] ${p}%`);
           await wait(160);
         }
         print("Verifying ... OK", "ok");
@@ -2540,6 +2545,54 @@ int main(void)
       audio.volume = +vol.value;
     });
 
+    // Плеер внизу появляется, когда музыку включили, и прячется, когда таверна осталась позади.
+    // Уходя из таверны, музыка плавно затихает и останавливается; при возвращении плеер снова виден,
+    // но сам не включается.
+    const player = $("#player");
+    const tavern = $("#tavern");
+    let started = false;
+    let ticking = false;
+    let fading = 0; // id кадра анимации затухания, 0 — не затухает
+    const stopFade = () => {
+      cancelAnimationFrame(fading);
+      fading = 0;
+      audio.volume = +vol.value;
+    };
+    const fadeOut = () => {
+      const from = audio.volume;
+      const t0 = performance.now();
+      const step = (now) => {
+        const k = Math.min(1, (now - t0) / 1500);
+        audio.volume = from * (1 - k);
+        if (k < 1) fading = requestAnimationFrame(step);
+        else {
+          audio.pause();
+          stopFade();
+        }
+      };
+      fading = requestAnimationFrame(step);
+    };
+    const showPlayer = () => {
+      const past = tavern.getBoundingClientRect().bottom < 0;
+      const on = started && !past;
+      player.classList.toggle("is-ready", on);
+      document.body.classList.toggle("has-player", on);
+      if (past && !audio.paused && !fading) fadeOut();
+      if (!past && fading) stopFade(); // вернулся, пока затихало, — играем дальше
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!started || ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          showPlayer();
+        });
+      },
+      { passive: true },
+    );
+
     const toggle = () => {
       if (audio.paused) {
         audio.muted = false;
@@ -2565,9 +2618,8 @@ int main(void)
       if (!unlocking) {
         setState(true);
         unlock("music");
-        // плеер внизу появляется, только когда музыку включили в таверне, и дальше остаётся
-        $("#player").classList.add("is-ready");
-        document.body.classList.add("has-player");
+        started = true;
+        showPlayer();
       }
     });
     audio.addEventListener("pause", () => setState(false));
