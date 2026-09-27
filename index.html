@@ -11,14 +11,14 @@
   <meta name="description" content="Журнал заданий Хитрого Рыжего Лиса: уровень 27. Прикоснись к медальону.">
 
   <!-- Open Graph: как ссылка разворачивается в Telegram / WhatsApp / VK.
-       После деплоя замени USERNAME и REPO на свои (см. README). -->
+       Адрес сайта на GitHub Pages: https://dariashev1.github.io/fox-27/ -->
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
-  <meta property="og:site_name" content="Журнал заданий Хитрого Лиса">
+  <meta property="og:site_name" content="Журнал заданий Хитрого Рыжего Лиса">
   <meta property="og:title" content="Хитрый Рыжий Лис, уровень 27">
   <meta property="og:description" content="Новое задание в журнале: открыть медальон и задуть 27 свечей. 29.09.2026">
-  <meta property="og:url" content="https://USERNAME.github.io/REPO/">
-  <meta property="og:image" content="https://USERNAME.github.io/REPO/images/og-cover.png">
+  <meta property="og:url" content="https://dariashev1.github.io/fox-27/">
+  <meta property="og:image" content="https://dariashev1.github.io/fox-27/images/og-cover.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Золотой медальон с головой лиса на тёмном фоне">
@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
   <!-- ?v= — версия файлов: увеличь число после правок, чтобы браузеры не брали старую копию из кэша -->
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=31">
 </head>
 <body class="is-locked">
 
@@ -208,7 +208,7 @@
           <path d="M-28 0 L0 -5 L28 0 L0 5 Z" fill="#a98545"/>
           <text y="-32" text-anchor="middle" class="map-small">С</text>
         </g>
-        <text x="14" y="168" class="map-note">здесь водятся лисы</text>
+        <text x="14" y="168" class="map-note">здесь водятся драконы</text>
 
         <!-- ЛОКАЦИИ -->
         <a href="#pavlodar" class="map-loc" aria-label="Павлодар">
@@ -711,6 +711,72 @@
       <p class="quest-card__reward" data-text="worlds.diablo.reward"></p>
     </article>
 
+    <!-- Вестерос: книги, сериал, «Дом дракона» + драконье яйцо (пасхалка) -->
+    <article class="quest-card quest-card--dragon reveal" aria-labelledby="westeros-title">
+      <p class="quest-card__kicker" data-text="worlds.westeros.kicker"></p>
+      <h3 class="quest-card__title" id="westeros-title" data-text="worlds.westeros.title"></h3>
+      <p class="quest-card__status">Статус: <span class="badge badge--progress" data-text="worlds.westeros.status"></span></p>
+      <div class="progress" role="progressbar" aria-label="Прогресс задания" aria-valuemin="0" aria-valuemax="100" id="westerosProgress"><span></span></div>
+      <ul class="objectives" id="westerosObjectives"></ul>
+      <div class="egg-row">
+        <p class="quest-card__reward" data-text="worlds.westeros.reward"></p>
+        <button class="egg" id="dragonEgg" type="button" aria-label="Драконье яйцо">
+          <svg viewBox="0 0 80 100" aria-hidden="true">
+            <defs>
+              <radialGradient id="g-egg" cx=".38" cy=".32" r=".8">
+                <stop offset="0" stop-color="#b8433b"/>
+                <stop offset=".55" stop-color="#5e1616"/>
+                <stop offset="1" stop-color="#1c0706"/>
+              </radialGradient>
+              <pattern id="p-scales" width="10" height="8" patternUnits="userSpaceOnUse">
+                <path d="M0 8 Q5 0 10 8" fill="none" stroke="#e8c46a" stroke-opacity=".35" stroke-width=".9"/>
+              </pattern>
+              <clipPath id="clip-egg-top"><rect x="0" y="0" width="80" height="50"/></clipPath>
+              <clipPath id="clip-egg-bottom"><rect x="0" y="50" width="80" height="50"/></clipPath>
+            </defs>
+            <!-- дракончик: голова и шея — один силуэт, вылезает из нижней половинки скорлупы -->
+            <g class="egg__dragon">
+              <defs>
+                <linearGradient id="g-drake" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#9a2a22"/>
+                  <stop offset="1" stop-color="#3a0c0a"/>
+                </linearGradient>
+              </defs>
+              <!-- сложенное крыло за шеей -->
+              <path d="M50 70 C56 56 64 44 74 32 C75 46 72 58 64 70 Z" fill="#4a0f0c" stroke="#e8c46a" stroke-opacity=".3" stroke-width=".6"/>
+              <path d="M52 68 L72 36 M56 69 L73 44 M60 70 L72 54" stroke="#e8c46a" stroke-opacity=".3" stroke-width=".6"/>
+              <!-- дальний рог -->
+              <path d="M39 23 C45 16 51 13 57 14 C51 17 47 21 43 26 Z" fill="#2a0806"/>
+              <!-- голова, рог, шея и гребень -->
+              <path d="M30 74 C30 60 28 49 32 41 C27 39 21 38 16 36 L11 33 L13 29.5 C19 26 26 24 32 22 L36 21 C41 17 47 13 59 9 C53 15 49 19 46 24 C49 27 50 30 49 32 L55 30 L50 37 C51 40 51 42 51 44 L58 44 L52 50 C53 52 53 54 54 56 L61 57 L54 62 C55 66 55 70 55 74 Z" fill="url(#g-drake)" stroke="#e8c46a" stroke-opacity=".45" stroke-width=".7" stroke-linejoin="round"/>
+              <!-- пластины на горле -->
+              <path d="M33 43 C31 52 32 62 33 74 L39 74 C37 62 36 52 37 43 Z" fill="#c9793a" opacity=".55"/>
+              <path d="M32.5 50 H37 M32.5 56 H37.5 M33 62 H38 M33 68 H38.5" stroke="#3a0c0a" stroke-opacity=".6" stroke-width=".6"/>
+              <!-- пасть, ноздря, глаз со зрачком-щелью -->
+              <path d="M13 32.5 L25 34" stroke="#2a0806" stroke-width=".9" stroke-linecap="round"/>
+              <circle cx="15.5" cy="30.3" r=".8" fill="#2a0806"/>
+              <path d="M26 27.2 C28 25.4 32 25.4 34 27.2 C32 29 28 29 26 27.2 Z" fill="#ffc94a"/>
+              <path d="M30 25.6 V28.8" stroke="#1c0706" stroke-width="1.1" stroke-linecap="round"/>
+              <path d="M25.5 25.6 C28 24.2 32 24.2 34.5 25.4" fill="none" stroke="#2a0806" stroke-width=".9"/>
+            </g>
+            <g class="egg__shell">
+              <g class="egg__top" clip-path="url(#clip-egg-top)">
+                <path d="M40 6 C60 6 72 36 72 58 C72 80 58 94 40 94 C22 94 8 80 8 58 C8 36 20 6 40 6 Z" fill="url(#g-egg)"/>
+                <path d="M40 6 C60 6 72 36 72 58 C72 80 58 94 40 94 C22 94 8 80 8 58 C8 36 20 6 40 6 Z" fill="url(#p-scales)"/>
+              </g>
+              <g class="egg__bottom" clip-path="url(#clip-egg-bottom)">
+                <path d="M40 6 C60 6 72 36 72 58 C72 80 58 94 40 94 C22 94 8 80 8 58 C8 36 20 6 40 6 Z" fill="url(#g-egg)"/>
+                <path d="M40 6 C60 6 72 36 72 58 C72 80 58 94 40 94 C22 94 8 80 8 58 C8 36 20 6 40 6 Z" fill="url(#p-scales)"/>
+              </g>
+              <path class="egg__crack egg__crack--1" d="M24 30 L30 38 L26 44 L33 50" fill="none" stroke="#ffd98a" stroke-width="1.6" stroke-linecap="round"/>
+              <path class="egg__crack egg__crack--2" d="M52 36 L48 44 L55 50 L50 58 L56 64" fill="none" stroke="#ffd98a" stroke-width="1.6" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </button>
+      </div>
+      <p class="egg__msg" id="eggMsg" aria-live="polite"></p>
+    </article>
+
     <!-- Кола: карточка предмета в духе игрового инвентаря -->
     <article class="item-card reveal" aria-labelledby="cola-name">
       <p class="item-card__kicker" data-text="cola.kicker"></p>
@@ -777,7 +843,7 @@
   <section class="chapter" id="tavern" aria-labelledby="tavern-title">
     <header class="chapter__head reveal">
       <p class="chapter__num">Локация · Таверна</p>
-      <h2 class="chapter__title" id="tavern-title">Таверна «Рыжий Лис»</h2>
+      <h2 class="chapter__title" id="tavern-title">Таверна «Горячий паяльник»</h2>
       <p class="chapter__lead" data-text="music.lead"></p>
     </header>
 
@@ -896,6 +962,25 @@
     <div class="prose reveal" data-paras="music.text"></div>
     <p class="center reveal"><button class="btn" id="tavernPlay" type="button">Попросить барда спеть</button></p>
 
+    <!-- Ноты песни для фортепиано -->
+    <a class="sheet reveal" id="sheetLink" href="notes/wolven-storm.pdf" target="_blank" rel="noopener">
+      <svg class="sheet__icon" viewBox="0 0 64 48" aria-hidden="true">
+        <g stroke="#5a4127" stroke-width="1"><path d="M4 12 H60 M4 17 H60 M4 22 H60 M4 27 H60 M4 32 H60"/></g>
+        <path d="M8 8 C14 14 6 22 12 28 C16 34 8 38 10 42" fill="none" stroke="#2c1e12" stroke-width="1.6"/>
+        <g fill="#2c1e12">
+          <ellipse cx="26" cy="30" rx="3.6" ry="2.6" transform="rotate(-20 26 30)"/><path d="M29 29 V13" stroke="#2c1e12" stroke-width="1.4"/>
+          <ellipse cx="38" cy="25" rx="3.6" ry="2.6" transform="rotate(-20 38 25)"/><path d="M41 24 V8" stroke="#2c1e12" stroke-width="1.4"/>
+          <ellipse cx="50" cy="20" rx="3.6" ry="2.6" transform="rotate(-20 50 20)"/><path d="M53 19 V5" stroke="#2c1e12" stroke-width="1.4"/>
+          <path d="M29 13 L41 8 V10.5 L29 15.5 Z"/>
+        </g>
+      </svg>
+      <span class="sheet__text">
+        <b data-text="music.sheet.title"></b>
+        <span data-text="music.sheet.text"></span>
+      </span>
+      <span class="sheet__go" data-text="music.sheet.button"></span>
+    </a>
+
     <h3 class="notices__title reveal" data-text="music.boardTitle"></h3>
     <ul class="notices reveal" id="tavernBoard"></ul>
   </section>
@@ -928,7 +1013,54 @@
       <h2 class="chapter__title" id="final-title" data-text="final.title"></h2>
     </header>
 
-    <article class="letter parchment reveal">
+    <!-- Ворон приносит письмо: печать нужно сломать, чтобы прочитать -->
+    <div class="raven reveal" id="raven">
+      <svg class="raven__bird" viewBox="0 0 160 124" aria-hidden="true">
+        <rect x="46" y="108" width="92" height="6" rx="3" fill="#4a3222"/>
+        <path d="M58 108 L50 116 M122 108 L130 118" stroke="#4a3222" stroke-width="3" stroke-linecap="round"/>
+        <g class="raven__body">
+          <path d="M78 92 V109 M90 94 V109" stroke="#2a1d15" stroke-width="2.2"/>
+          <path d="M74 109 H84 M86 109 H96" stroke="#2a1d15" stroke-width="2" stroke-linecap="round"/>
+          <path d="M44 52 C60 44 88 46 104 58 C116 66 128 74 148 92 L132 90 L142 102 L122 93 C110 97 92 97 76 93 C60 89 48 75 44 52 Z" fill="#0f0b09" stroke="#5a5f78" stroke-opacity=".55" stroke-width="1.2"/>
+          <circle cx="48" cy="42" r="11" fill="#0f0b09" stroke="#5a5f78" stroke-opacity=".55" stroke-width="1.2"/>
+          <path d="M20 45 L39 37 L42 49 Z" fill="#3a3430" stroke="#6a6258" stroke-width=".8"/>
+          <path d="M62 56 C82 50 104 58 120 78 C100 78 80 75 62 66 Z" fill="#1c1612"/>
+          <path d="M70 60 C84 60 98 66 110 76 M68 64 C82 66 94 70 104 77" fill="none" stroke="#2e2620" stroke-width="1"/>
+          <path d="M40 34 C46 30 54 32 58 38" fill="none" stroke="#3a3f52" stroke-width="1.2" opacity=".7"/>
+          <circle cx="45" cy="40" r="2" fill="#e8c46a"/>
+          <!-- свиток на лапе -->
+          <rect x="92" y="98" width="24" height="9" rx="4.5" fill="#ead9b3" stroke="#8c6423" stroke-width=".8"/>
+          <path d="M102 98 V107 M106 98 V107" stroke="#8e2a2a" stroke-width="1.6"/>
+        </g>
+      </svg>
+      <p class="raven__hint" data-text="final.raven.hint"></p>
+      <button class="seal" id="sealBtn" type="button">
+        <svg class="seal__wax" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <radialGradient id="g-wax" cx=".4" cy=".35" r=".75">
+              <stop offset="0" stop-color="#c24a3e"/>
+              <stop offset=".6" stop-color="#8e2a2a"/>
+              <stop offset="1" stop-color="#5a1414"/>
+            </radialGradient>
+            <g id="seal-art">
+              <path d="M50 6 C60 4 66 12 74 12 C84 14 86 24 92 30 C98 40 92 48 94 56 C96 68 86 72 82 80 C76 90 66 88 58 94 C48 98 42 90 34 90 C22 90 18 80 12 74 C4 66 10 56 6 48 C4 36 14 32 18 24 C24 12 36 14 42 8 C45 6 47 6 50 6 Z" fill="url(#g-wax)"/>
+              <circle cx="50" cy="50" r="30" fill="none" stroke="#5a1414" stroke-width="2.4"/>
+              <circle cx="50" cy="50" r="26" fill="none" stroke="#c24a3e" stroke-width="1" opacity=".6"/>
+              <path d="M34 36 L40 24 L46 36 H54 L60 24 L66 36 L66 48 L50 70 L34 48 Z" fill="#6b1a16"/>
+              <path d="M34 36 L40 24 L46 36 H54 L60 24 L66 36" fill="none" stroke="#d9695a" stroke-width="1.2" opacity=".7"/>
+              <path d="M40 46 L45 49 M60 46 L55 49" stroke="#d9695a" stroke-width="1.6" stroke-linecap="round"/>
+            </g>
+            <clipPath id="clip-seal-l"><path d="M0 0 H52 L46 30 L54 52 L46 74 L50 100 H0 Z"/></clipPath>
+            <clipPath id="clip-seal-r"><path d="M52 0 H100 V100 H50 L46 74 L54 52 L46 30 Z"/></clipPath>
+          </defs>
+          <g class="seal__half seal__half--l" clip-path="url(#clip-seal-l)"><use href="#seal-art"/></g>
+          <g class="seal__half seal__half--r" clip-path="url(#clip-seal-r)"><use href="#seal-art"/></g>
+        </svg>
+        <span class="seal__label" data-text="final.raven.button"></span>
+      </button>
+    </div>
+
+    <article class="letter parchment reveal" id="letter">
       <div class="letter__body" data-paras="final.text"></div>
       <p class="letter__sign" data-text="signature"></p>
     </article>
@@ -1038,6 +1170,6 @@
 
 <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
-<script src="script.js?v=25"></script>
+<script src="script.js?v=31"></script>
 </body>
 </html>
