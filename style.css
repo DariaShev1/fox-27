@@ -911,18 +911,85 @@ main { overflow-x: clip; }
 }
 
 /* =========================================================
-   9. ДОРОГА
+   9. ТАВЕРНА
    ========================================================= */
-.road {
+.tavern {
   margin: 0 calc(var(--gutter) * -1);
   border-top: 1px solid var(--gold-deep);
   border-bottom: 1px solid var(--gold-deep);
 }
-.road svg { width: 100%; height: auto; aspect-ratio: 400 / 220; }
-.road__line { animation: road 1.2s linear infinite; animation-play-state: paused; }
-.is-playing .road__line { animation-play-state: running; }
-@keyframes road { to { stroke-dashoffset: 22; } }
-#roadPlay { margin-top: 26px; }
+.tavern svg { width: 100%; height: auto; aspect-ratio: 400 / 220; display: block; }
+.tavern__fire { transform-box: fill-box; transform-origin: 50% 100%; animation: flame 1.6s ease-in-out infinite alternate; }
+.tavern__glow { animation: glow 2.4s ease-in-out infinite alternate; }
+@keyframes flame {
+  0% { transform: scale(1, 1); }
+  40% { transform: scale(1.04, .93); }
+  100% { transform: scale(.97, 1.07); }
+}
+@keyframes glow { from { opacity: .7; } to { opacity: 1; } }
+
+/* ноты видны и летят, только когда играет музыка */
+.tavern__note { opacity: 0; animation: note 3s ease-out infinite; animation-play-state: paused; }
+.tavern__note:nth-child(1) { --x: 232px; --y: 140px; }
+.tavern__note:nth-child(2) { --x: 182px; --y: 124px; animation-delay: 1s; }
+.tavern__note:nth-child(3) { --x: 64px; --y: 60px; animation-delay: 2s; }
+.is-playing .tavern__note { animation-play-state: running; }
+@keyframes note {
+  0% { opacity: 0; transform: translate(var(--x), var(--y)); }
+  20% { opacity: .9; }
+  100% { opacity: 0; transform: translate(calc(var(--x) + 18px), calc(var(--y) - 50px)) rotate(12deg); }
+}
+#tavernPlay { margin-top: 26px; }
+
+/* доска заказов */
+.notices__title {
+  margin: 44px 0 16px;
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--gold-hi);
+  text-align: center;
+}
+.notices {
+  list-style: none;
+  margin: 0;
+  padding: 18px 14px;
+  display: grid;
+  gap: 16px;
+  background: #3a2517;
+  border: 3px solid #1a110b;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .5);
+}
+.notice {
+  position: relative;
+  padding: 20px 16px 14px;
+  background: var(--parchment);
+  color: var(--ink-dark);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .45);
+  transform: rotate(-1.2deg);
+}
+.notice:nth-child(2) { transform: rotate(1deg); }
+.notice:nth-child(3) { transform: rotate(-.6deg); }
+.notice::before {
+  content: "";
+  position: absolute; top: 7px; left: 50%;
+  width: 9px; height: 9px; margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--crimson-hi);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+}
+.notice h4 {
+  margin: 0 0 6px;
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  color: var(--crimson);
+}
+.notice p { margin: 0; font-size: .95rem; line-height: 1.45; }
+.notice .notice__reward { margin-top: 10px; font-style: italic; color: var(--ink-dark-2); }
+@media (min-width: 640px) {
+  .notices { grid-template-columns: repeat(3, 1fr); padding: 22px 18px; }
+}
 
 /* ---------- Плеер ---------- */
 .player {
@@ -1073,6 +1140,9 @@ main { overflow-x: clip; }
   color: var(--gold-hi);
   font-family: var(--font-mono); font-size: 16px;
 }
+.la__baud { width: 100%; }
+.la__baud::placeholder { color: var(--muted); opacity: .7; }
+.la__baud:focus, .la__select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212, 167, 74, .2); }
 .la__fmt { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .la__fmt .chip[aria-pressed="true"] { border-color: var(--gold); background: linear-gradient(180deg, #f1d38a, #c9962f); color: var(--ink-dark); font-weight: 700; }
 .la__scope { display: flex; border: 1px solid #2a2119; border-radius: var(--radius); background: #07090b; overflow: hidden; }
@@ -1249,7 +1319,7 @@ main { overflow-x: clip; }
   .quests { grid-template-columns: repeat(2, 1fr); }
   .trophies__grid { grid-template-columns: repeat(8, 1fr); }
   .gallery--polaroid { grid-template-columns: repeat(4, 1fr); }
-  .skyline, .road { margin: 0; border: 1px solid var(--gold-deep); border-radius: var(--radius); overflow: hidden; }
+  .skyline, .tavern { margin: 0; border: 1px solid var(--gold-deep); border-radius: var(--radius); overflow: hidden; }
   .player { justify-content: center; }
   .player__meta { flex: 0 1 360px; }
 }
